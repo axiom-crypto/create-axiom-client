@@ -1,13 +1,11 @@
 {
   "name": "create-axiom-client",
   "description": "Create Axiom client",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "author": "Intrinsic Technologies",
   "scripts": {
-    "build": "tsup src/cli.ts --minify",
-    "clean": "shx rm -rf lib",
-    "dev": "tsup src/cli.ts --watch",
-    "prepublishOnly": "npm run clean && npm run build"
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
   },
   "bin": "dist/cli.js",
   "files": [
@@ -15,11 +13,10 @@
   ],
   "devDependencies": {
     "@types/node": "^18.19.8",
-    "tsup": "^5.12.9",
     "typescript": "^5.3.3"
   },
   "license": "MIT",
   "dependencies": {
-    "@axiom-crypto/client": "0.2.3-rc2.3"
+    "@axiom-crypto/client": "2.0.0"
   }
 }
