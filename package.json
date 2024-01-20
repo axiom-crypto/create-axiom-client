@@ -17,6 +17,6 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@axiom-crypto/client": "2.0.0"
+    "@axiom-crypto/client": "2.0.2"
   }
 }
