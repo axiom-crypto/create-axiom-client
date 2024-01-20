@@ -1,7 +1,7 @@
 {
   "name": "create-axiom-client",
   "description": "Create Axiom client",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "Intrinsic Technologies",
   "scripts": {
     "build": "tsc",
@@ -17,6 +17,6 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@axiom-crypto/client": "2.0.2"
+    "@axiom-crypto/client": "2.0.3"
   }
 }
