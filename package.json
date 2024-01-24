@@ -1,22 +1,25 @@
 {
   "name": "create-axiom-client",
   "description": "Create Axiom client",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "author": "Intrinsic Technologies",
   "scripts": {
-    "build": "tsc",
+    "build": "rm -rf dist && node ./script/preBuild.js && tsc && node ./script/postBuild.js",
     "prepublishOnly": "npm run build"
   },
-  "bin": "dist/cli.js",
+  "bin": "dist/index.js",
   "files": [
     "dist"
   ],
   "devDependencies": {
     "@types/node": "^18.19.8",
+    "@types/prompts": "^2.4.9",
     "typescript": "^5.3.3"
   },
   "license": "MIT",
   "dependencies": {
-    "@axiom-crypto/client": "2.0.3"
+    "chalk": "^4.1.2",
+    "commander": "^11.1.0",
+    "prompts": "^2.4.2"
   }
 }
