@@ -37,6 +37,8 @@ export const scaffoldProject = async (sm: ProjectScaffoldManager, appScaffold: s
       await sm.rm(`${path.join(nextjsTempDir, ".git")}`, `    - Remove cloned Next.js scaffold's ${chalk.bold(".git")} folder`);
     }
     sm.cp(`${nextjsTempDir}`, appPath, `  - Copy Next.js scaffold files to ${chalk.bold(sm.basePath)}`);
+
+    await sm.exec(`rm -rf ${nextjsTempDir}`, "Clean up next.js temp files");
   }
 
   // Remove cloned repo

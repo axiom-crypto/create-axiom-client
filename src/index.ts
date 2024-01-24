@@ -4,6 +4,8 @@ import { Command } from "commander";
 import { init } from "./projectScaffold/init";
 import { checkVersion } from "./checkVersion";
 import { SCAFFOLD_VERSION } from "./version";
+import { scaffoldNext } from "./projectScaffold/nextjs";
+import { scaffoldScript } from "./projectScaffold/script";
 
 async function main() {
   // Check current scaffold version against latest version
@@ -25,6 +27,23 @@ async function main() {
     .option("-s, --scaffold [type]", "type of scaffold (nextjs, script, none)")
     .option("-m, --manager [name]", "package manager to use (npm, yarn, pnpm)")
     .action(init);
+
+  const scaffold = program.command("scaffold")
+    .description("Generate scaffolds for Axiom apps");
+  
+  scaffold
+    .command("nextjs")
+    .description("Scaffold a Next.js dApp that incorporates Axiom")
+    .option("-p, --path [path]", "Next.js dApp path")
+    .option("-m, --manager [name]", "package manager to use (npm, yarn, pnpm)")
+    .action(scaffoldNext)
+  
+  scaffold
+    .command("script")
+    .description("Scaffold a script to send Axiom Queries")
+    .option("-p, --path [path]", "Script path")
+    .option("-m, --manager [name]", "package manager to use (npm, yarn, pnpm)")
+    .action(scaffoldScript)
 
   program.parseAsync(process.argv);
 }
