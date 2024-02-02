@@ -9,7 +9,7 @@ import { scaffoldScript } from "./projectScaffold/script";
 
 async function main() {
   // Check current scaffold version against latest version
-  checkVersion();
+  await checkVersion();
 
   if (process.argv.length < 3) {
     await init({});
