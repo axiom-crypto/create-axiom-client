@@ -14,8 +14,6 @@ export const init = async (
     packageMgr?: string,
   }
 ) => {
-  console.log(`create-axiom-client v${CURRENT_VERSION}`);
-
   // Check that user has installed forge
   await validateForge();
 

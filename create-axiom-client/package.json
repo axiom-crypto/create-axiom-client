@@ -3,20 +3,27 @@
   "description": "Create Axiom client",
   "version": "0.1.2",
   "author": "Intrinsic Technologies",
+  "type": "module",
+  "main": "index.js",
+  "exports": {
+    ".": "./dist/index.js",
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "create-axiom-client": "dist/index.js"
+  },
   "scripts": {
     "build": "rm -rf dist && tsc",
     "prepublishOnly": "npm run build"
   },
-  "bin": "dist/cli.js",
-  "files": [
-    "dist"
-  ],
   "devDependencies": {
     "@types/node": "^18.19.8",
+    "@types/semver": "^7.5.7",
     "typescript": "^5.3.3"
   },
   "license": "MIT",
   "dependencies": {
+    "ora": "^8.0.1",
     "semver": "^7.6.0"
   }
 }

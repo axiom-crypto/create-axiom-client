@@ -1,16 +1,15 @@
 {
-  "name": "@axiom-crypto/init",
+  "name": "axiom-init",
   "description": "Initialize a new Axiom project",
   "version": "0.1.2",
   "author": "Intrinsic Technologies",
   "scripts": {
-    "build": "rm -rf dist && node ./script/preBuild.js && tsc && node ./script/postBuild.js",
+    "build": "rm -rf dist && node ./script/preBuild.js && tsc",
     "prepublishOnly": "npm run build"
   },
-  "bin": "dist/index.js",
-  "files": [
-    "dist"
-  ],
+  "bin": {
+    "axiom-init": "dist/index.js"
+  },
   "devDependencies": {
     "@types/node": "^18.19.8",
     "@types/prompts": "^2.4.9",

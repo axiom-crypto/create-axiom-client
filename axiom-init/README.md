@@ -1,6 +1,6 @@
-# Create Axiom Client
+# Axiom Init
 
-Interactive CLI tool to generate a new Axiom project.
+Initializes an Axiom project.
 
 ## Introduction
 
