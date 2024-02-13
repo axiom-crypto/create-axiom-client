@@ -1,6 +1,6 @@
 {
-  "name": "create-axiom-client",
-  "description": "Create Axiom client",
+  "name": "@axiom-crypto/init",
+  "description": "Initialize a new Axiom project",
   "version": "0.1.2",
   "author": "Intrinsic Technologies",
   "scripts": {

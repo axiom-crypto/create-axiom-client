@@ -8,8 +8,15 @@ import { scaffoldNext } from "./projectScaffold/nextjs";
 import { scaffoldScript } from "./projectScaffold/script";
 
 async function main() {
+  // if (process.argv.length === 3) {
+  //   if (process.argv[2] === "--version" || process.argv[2] === "-v") {
+  //     console.log(CURRENT_VERSION);
+  //     process.exit();
+  //   }
+  // }
+
   // Check current scaffold version against latest version
-  await checkVersion();
+  // await checkVersion();
 
   if (process.argv.length < 3) {
     await init({});
