@@ -97,7 +97,7 @@ export const scaffoldScript = async (
   const tempAppDir = path.join(tempDir, "app");
 
   // Copy files to target path
-  sm.cp(tempAppDir, sm.basePath, `  - Copying files to ${chalk.bold(sm.basePath)}`);
+  sm.cp(`${tempAppDir}/.`, ".", `  - Copy files to ${chalk.bold(sm.basePath)}`);
 
   // Clean up cloned repo
   await sm.exec(`rm -rf ${tempDir}`, "Clean up build files");
