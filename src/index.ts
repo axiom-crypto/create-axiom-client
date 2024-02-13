@@ -3,7 +3,7 @@
 import { Command } from "commander";
 import { init } from "./projectScaffold/init";
 import { checkVersion } from "./checkVersion";
-import { SCAFFOLD_VERSION } from "./version";
+import { CURRENT_VERSION } from "./version";
 import { scaffoldNext } from "./projectScaffold/nextjs";
 import { scaffoldScript } from "./projectScaffold/script";
 
@@ -18,7 +18,7 @@ async function main() {
 
   const program = new Command('axiom');
 
-  program.name("axiom").version(SCAFFOLD_VERSION).description("Axiom CLI");
+  program.name("axiom").version(CURRENT_VERSION).description("Axiom CLI");
 
   program
     .command("init")

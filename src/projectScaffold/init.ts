@@ -5,7 +5,7 @@ import { validateForge, validatePackageManager } from './dependency';
 import { scaffoldNext } from './nextjs';
 import { scaffoldProject } from './project';
 import { ProjectScaffoldManager } from './projectScaffoldManager';
-import { SCAFFOLD_VERSION } from '../version';
+import { CURRENT_VERSION } from '../version';
 
 export const init = async (
   options: {
@@ -14,7 +14,7 @@ export const init = async (
     packageMgr?: string,
   }
 ) => {
-  console.log(`create-axiom-client v${SCAFFOLD_VERSION}`);
+  console.log(`create-axiom-client v${CURRENT_VERSION}`);
 
   // Check that user has installed forge
   await validateForge();
