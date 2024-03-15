@@ -29,6 +29,16 @@ export const scaffoldProject = async (sm: ProjectScaffoldManager, appScaffold: s
     // Delete app folder
     await sm.rm("app", `  - Remove cloned quickstart scaffold's ${chalk.bold("app")} folder`);
 
+    // Update root package.json to remove start script
+    const rootPackageJson = sm.readFile("package.json");
+    if (rootPackageJson) {
+      const packageJsonObj = JSON.parse(rootPackageJson);
+      if (packageJsonObj.scripts && packageJsonObj.scripts.start) {
+        delete packageJsonObj.scripts.start;
+        sm.writeFile("package.json", JSON.stringify(packageJsonObj, null, 2));
+      }
+    }
+
     // Clone next.js scaffold to app folder
     console.log("Fetching Axiom Next.js scaffold...");
     const nextjsTempDir = `.axiom-temp-nextjs-${Date.now()}`; 

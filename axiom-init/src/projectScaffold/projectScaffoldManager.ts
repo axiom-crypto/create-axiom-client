@@ -46,6 +46,10 @@ export class ProjectScaffoldManager {
     return fs.readFileSync(path.join(this.fullPath, filePath), 'utf8');
   }
 
+  writeFile(filePath: string, data: string) {
+    fs.writeFileSync(path.join(this.fullPath, filePath), data);
+  }
+
   mkdir(dir: string, description: string) {
     const res = fs.mkdirSync(path.join(this.fullPath, dir), { recursive: true });
     this.actions.push({
