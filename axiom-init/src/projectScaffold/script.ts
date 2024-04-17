@@ -7,7 +7,7 @@ import { validatePackageManager } from "./dependency";
 export const scaffoldScript = async (
   options: {
     path: string,
-    packageMgr: string,
+    manager: string,
   },
   _commands: any, // unused commands from commander.js
   sm?: ProjectScaffoldManager,
@@ -24,7 +24,7 @@ export const scaffoldScript = async (
         message: "Path to initialize Axiom Script project (default: './app')?"
       },
       {
-        name: "packageMgr",
+        name: "manager",
         type: "select",
         choices: [
           { title: "npm", value: "npm", description: "Use npm as the package manager (default)" }, 
@@ -43,8 +43,8 @@ export const scaffoldScript = async (
     }
 
     // Validate package manager answers in options
-    if (options.packageMgr !== undefined) {
-      const parsedManager = options.packageMgr.trim().toLowerCase();
+    if (options.manager !== undefined) {
+      const parsedManager = options.manager.trim().toLowerCase();
       switch (parsedManager) {
         case "npm":
         case "yarn":
@@ -54,7 +54,7 @@ export const scaffoldScript = async (
           throw new Error("Invalid option for package manager. Valid options: [npm, yarn, pnpm]");
       }
       setupQuestions = setupQuestions.filter((obj) => {
-        return obj.name !== "packageMgr";
+        return obj.name !== "manager";
       });
     }
 
@@ -70,9 +70,9 @@ export const scaffoldScript = async (
     }
 
     // Validate that the package manager the user has selected is installed
-    validatePackageManager(options.packageMgr);
+    validatePackageManager(options.manager);
 
-    sm = new ProjectScaffoldManager(options.path, options.packageMgr);
+    sm = new ProjectScaffoldManager(options.path, options.manager);
   } else {
     // Set the ProjectScaffoldManager's path to the new path
     sm.setPath(options.path);

@@ -11,7 +11,7 @@ export const init = async (
   options: {
     path?: string,
     scaffold?: string,
-    packageMgr?: string,
+    manager?: string,
   }
 ) => {
   // Check that user has installed forge
@@ -35,7 +35,7 @@ export const init = async (
       message: "Type of Axiom app interface to use?"
     },
     {
-      name: "packageMgr",
+      name: "manager",
       type: "select",
       choices: [
         { title: "npm", value: "npm", description: "Use npm as the package manager (default)" }, 
@@ -70,8 +70,8 @@ export const init = async (
   }
 
   // Validate package manager answers in options
-  if (options.packageMgr !== undefined) {
-    const parsedManager = options.packageMgr.trim().toLowerCase();
+  if (options.manager !== undefined) {
+    const parsedManager = options.manager.trim().toLowerCase();
     switch (parsedManager) {
       case "npm":
       case "yarn":
@@ -81,7 +81,7 @@ export const init = async (
         throw new Error("Invalid option for package manager. Valid options: [npm, yarn, pnpm]");
     }
     setupQuestions = setupQuestions.filter((obj) => {
-      return obj.name !== "packageMgr";
+      return obj.name !== "manager";
     });
   }
 
@@ -97,10 +97,10 @@ export const init = async (
   }
 
   // Validate that the package manager the user has selected is installed
-  validatePackageManager(answers.packageMgr);
+  validatePackageManager(answers.manager);
 
   // Initialize scaffold manager
-  const sm = new ProjectScaffoldManager(answers.path, answers.packageMgr);
+  const sm = new ProjectScaffoldManager(answers.path, answers.manager);
 
   // Initialize project
   await scaffoldProject(sm, answers.scaffold);
