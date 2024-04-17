@@ -18,9 +18,6 @@ export const scaffoldProject = async (sm: ProjectScaffoldManager, appScaffold: s
   const tempDir = `.axiom-temp-${Date.now()}`;
   console.log("Fetching Axiom quickstart template...");
   await sm.exec(`git clone --depth 1 https://github.com/axiom-crypto/axiom-quickstart.git ${tempDir}`, "Clone Axiom quickstart template");
-  if (sm.exists(`${path.join(tempDir, ".git")}`, `  - Clone quickstart's ${chalk.bold(".git")} folder exists?`)) {
-    await sm.rm(`${path.join(tempDir, ".git")}`, `    - Remove cloned quickstart scaffold's ${chalk.bold(".git")} folder`);
-  }
   sm.cp(`${tempDir}/.`, ".", `  - Copy axiom-quickstart files to ${chalk.bold(sm.basePath)}`);
 
   if (appScaffold === "nextjs") {
@@ -43,12 +40,12 @@ export const scaffoldProject = async (sm: ProjectScaffoldManager, appScaffold: s
     console.log("Fetching Axiom Next.js scaffold...");
     const nextjsTempDir = `.axiom-temp-nextjs-${Date.now()}`; 
     await sm.exec(`git clone --depth 1 https://github.com/axiom-crypto/axiom-scaffold-nextjs.git ${nextjsTempDir}`, "Clone Axiom Next.js scaffold");
-    if (sm.exists(`${path.join(nextjsTempDir, ".git")}`, `  - Clone next.js scaffold's ${chalk.bold(".git")} folder exists?`)) {
-      await sm.rm(`${path.join(nextjsTempDir, ".git")}`, `    - Remove cloned Next.js scaffold's ${chalk.bold(".git")} folder`);
-    }
     sm.cp(`${nextjsTempDir}`, appPath, `  - Copy Next.js scaffold files to ${chalk.bold(sm.basePath)}`);
 
     await sm.exec(`rm -rf ${nextjsTempDir}`, "Clean up next.js temp files");
+  } else if (appScaffold === "forge") {
+    // Delete app folder
+    await sm.rm("app", `  - Remove cloned quickstart scaffold's ${chalk.bold("app")} folder`);
   }
 
   // Remove cloned repo

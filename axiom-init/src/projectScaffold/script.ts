@@ -21,7 +21,7 @@ export const scaffoldScript = async (
       {
         name: "path",
         type: "text",
-        message: "Path to initialize Axiom Next.js project (default: './app')?"
+        message: "Path to initialize Axiom Script project (default: './app')?"
       },
       {
         name: "packageMgr",
@@ -89,7 +89,7 @@ export const scaffoldScript = async (
   // Move to base path
   process.chdir(sm.basePath);
 
-  // Clone the Next.js scaffold
+  // Clone the axiom-quickstart template
   console.log("Fetching Axiom quickstart template...");
   const tempDir = `.axiom-temp-${Date.now()}`; 
   await sm.exec(`git clone --depth 1 https://github.com/axiom-crypto/axiom-quickstart.git ${tempDir}`, "Clone Axiom quickstart template");

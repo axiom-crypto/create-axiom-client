@@ -46,7 +46,8 @@ async function main() {
     .command("forge")
     .description("Scaffold a Forge-only project")
     .option("-p, --path [path]", "Forge project path")
-    .action((opts, _cmd) => scaffoldForge({ path: opts.path }, _cmd));
+    .option("-m, --manager [name]", "package manager to use (npm, yarn, pnpm)")
+    .action(scaffoldForge);
 
   program.parseAsync(process.argv);
 }

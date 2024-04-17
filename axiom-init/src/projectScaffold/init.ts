@@ -30,6 +30,7 @@ export const init = async (
       choices: [
         { title: "Next.js", value: "nextjs", description: "Next.js dApp (default)" }, 
         { title: "Script", value: "script", description: "Simple test script" },
+        { title: "Forge", value: "forge", description: "Forge-only project" },
       ],
       message: "Type of Axiom app interface to use?"
     },
@@ -58,9 +59,10 @@ export const init = async (
     switch (parsedScaffold) {
       case "nextjs":
       case "script":
+      case "forge":
         break;
       default:
-        throw new Error("Invalid option for scaffold. Valid options: [nextjs, script]");
+        throw new Error("Invalid option for scaffold. Valid options: [nextjs, script, forge]");
     }
     setupQuestions = setupQuestions.filter((obj) => {
       return obj.name !== "scaffold";
