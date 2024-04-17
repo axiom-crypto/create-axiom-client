@@ -14,17 +14,17 @@ export interface Action {
 export class ProjectScaffoldManager {
   basePath: string;
   fullPath: string;
-  packageMgr: string;
+  manager: string;
   installCmd: string;
   devFlag: string;
   actions: Action[];
 
-  constructor(basePath: string, packageMgr: string) {
+  constructor(basePath: string, manager: string) {
     this.basePath = basePath;
     this.fullPath = path.resolve(basePath);
-    this.packageMgr = packageMgr;
-    this.installCmd = getInstallCmd(packageMgr);
-    this.devFlag = getDevFlag(packageMgr);
+    this.manager = manager;
+    this.installCmd = getInstallCmd(manager);
+    this.devFlag = getDevFlag(manager);
     this.actions = [] as Action[];
   }
 
