@@ -93,7 +93,6 @@ export const scaffoldNext = async (
   console.log("Fetching Axiom Next.js scaffold...");
   const tempDir = `.axiom-temp-${Date.now()}`; 
   await sm.exec(`git clone --depth 1 https://github.com/axiom-crypto/axiom-scaffold-nextjs.git ${tempDir}`, "Clone Axiom Next.js scaffold");
-  await sm.rm(`${tempDir}/.git`, `  - Remove cloned Next.js scaffold's ${chalk.bold(".git")} folder`);
   sm.cp(`${tempDir}/.`, ".", `  - Copy Next.js scaffold files to ${chalk.bold(sm.basePath)}`);
 
   // Install package dependencies
