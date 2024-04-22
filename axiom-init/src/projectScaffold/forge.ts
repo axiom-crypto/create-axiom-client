@@ -3,6 +3,8 @@ import chalk from 'chalk';
 import prompt, { PromptObject } from 'prompts';
 import { ProjectScaffoldManager } from "./projectScaffoldManager"
 import { validatePackageManager } from "./dependency";
+import { filterQuestions, findAndReplaceRecursive, parseAnswer } from './utils';
+import { Options, Prompts } from '../constants';
 
 export const scaffoldForge = async (
   options: {
@@ -19,44 +21,24 @@ export const scaffoldForge = async (
 
     // List of questions
     let setupQuestions: PromptObject[] = [
-      {
-        name: "path",
-        type: "text",
-        message: "Path to initialize Axiom Forge project (default: './axiom-quickstart')?"
-      },
-      {
-        name: "manager",
-        type: "select",
-        choices: [
-          { title: "npm", value: "npm", description: "Use npm as the package manager (default)" }, 
-          { title: "yarn", value: "yarn", description: "Use yarn as the package manager" },
-          { title: "pnpm", value: "pnpm", description: "Use pnpm as the package manager" },
-        ],
-        message: "Which package manager do you want to use for the project?"
-      }
+      Prompts.path,
+      Prompts.manager,
+      Prompts.chainId,
     ];
 
     // Remove prompt for path if it's already passed in
     if (options.path !== undefined) {
-      setupQuestions = setupQuestions.filter((obj) => {
-        return obj.name !== "path";
-      });
+      setupQuestions = filterQuestions("path", setupQuestions);
     }
-
+  
     // Validate package manager answers in options
-    if (options.manager !== undefined) {
-      const parsedManager = options.manager.trim().toLowerCase();
-      switch (parsedManager) {
-        case "npm":
-        case "yarn":
-        case "pnpm":
-          break;
-        default:
-          throw new Error("Invalid option for package manager. Valid options: [npm, yarn, pnpm]");
-      }
-      setupQuestions = setupQuestions.filter((obj) => {
-        return obj.name !== "manager";
-      });
+    if (parseAnswer("manager", options, Options.manager)) {
+      setupQuestions = filterQuestions("manager", setupQuestions);
+    }
+  
+    // Validate chainId answers in options
+    if (parseAnswer("chainId", options, Options.chainId)) {
+      setupQuestions = filterQuestions("chainId", setupQuestions);
     }
 
     let answers = await prompt(setupQuestions)
@@ -102,6 +84,13 @@ export const scaffoldForge = async (
   // Copy files to target path
   sm.cp(`${tempDir}/.`, ".", `  - Copy files to ${chalk.bold(sm.basePath)}`);
 
+
+  // Update chain ID
+  findAndReplaceRecursive(sm.basePath, 'CHAIN_ID = "11155111"', `CHAIN_ID = "${sm.chainId}"`);
+
+  // Update provider URI for Foundry
+  findAndReplaceRecursive(sm.basePath, 'PROVIDER_URI_11155111', `PROVIDER_URI_${sm.chainId}`);
+  
   // Clean up cloned repo
   await sm.exec(`rm -rf ${tempDir}`, "Clean up build files");
 
