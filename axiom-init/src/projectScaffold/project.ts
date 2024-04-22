@@ -1,6 +1,8 @@
 import path from 'path';
 import chalk from 'chalk';
 import { ProjectScaffoldManager } from './projectScaffoldManager';
+import { findAndReplaceRecursive } from './utils';
+import { ExampleV2Client } from '../constants';
 
 export const scaffoldProject = async (sm: ProjectScaffoldManager, appScaffold: string) => {
   const startingDir = process.cwd();
@@ -47,6 +49,12 @@ export const scaffoldProject = async (sm: ProjectScaffoldManager, appScaffold: s
     // Delete app folder
     await sm.rm("app", `  - Remove cloned quickstart scaffold's ${chalk.bold("app")} folder`);
   }
+
+  // Update network ID
+  findAndReplaceRecursive(sm.basePath, "11155111", sm.chainId);
+
+  // Update ExampleV2Client target address 
+  findAndReplaceRecursive(sm.basePath, "0x4A4e2D8f3fBb3525aD61db7Fc843c9bf097c362e", ExampleV2Client[sm.chainId]);
 
   // Remove cloned repo
   await sm.exec(`rm -rf ${tempDir}`, "Clean up build files");

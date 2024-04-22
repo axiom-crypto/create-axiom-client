@@ -15,14 +15,16 @@ export class ProjectScaffoldManager {
   basePath: string;
   fullPath: string;
   manager: string;
+  chainId: string;
   installCmd: string;
   devFlag: string;
   actions: Action[];
 
-  constructor(basePath: string, manager: string) {
+  constructor(basePath: string, manager: string, chainId: string) {
     this.basePath = basePath;
     this.fullPath = path.resolve(basePath);
     this.manager = manager;
+    this.chainId = chainId;
     this.installCmd = getInstallCmd(manager);
     this.devFlag = getDevFlag(manager);
     this.actions = [] as Action[];
