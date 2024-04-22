@@ -1,8 +1,7 @@
-import path from 'path';
 import chalk from 'chalk';
 import { ProjectScaffoldManager } from './projectScaffoldManager';
 import { findAndReplaceRecursive } from './utils';
-import { ExampleV2Client } from '../constants';
+import { AverageBalance, ExampleV2Client } from '../constants';
 
 export const scaffoldProject = async (sm: ProjectScaffoldManager, appScaffold: string) => {
   const startingDir = process.cwd();
@@ -50,11 +49,17 @@ export const scaffoldProject = async (sm: ProjectScaffoldManager, appScaffold: s
     await sm.rm("app", `  - Remove cloned quickstart scaffold's ${chalk.bold("app")} folder`);
   }
 
-  // Update network ID
-  findAndReplaceRecursive(sm.basePath, "11155111", sm.chainId);
+  // Update chain ID
+  findAndReplaceRecursive(sm.basePath, 'CHAIN_ID = "11155111"', `CHAIN_ID = "${sm.chainId}"`);
+
+  // Update provider URI for Foundry
+  findAndReplaceRecursive(sm.basePath, 'PROVIDER_URI_11155111', `PROVIDER_URI_${sm.chainId}`);
 
   // Update ExampleV2Client target address 
   findAndReplaceRecursive(sm.basePath, "0x4A4e2D8f3fBb3525aD61db7Fc843c9bf097c362e", ExampleV2Client[sm.chainId]);
+
+  // Update deployed Average contract address
+  findAndReplaceRecursive(sm.basePath, "0x50F2D5c9a4A35cb922a631019287881f56A00ED5", AverageBalance[sm.chainId]);
 
   // Remove cloned repo
   await sm.exec(`rm -rf ${tempDir}`, "Clean up build files");
