@@ -20,9 +20,10 @@ async function main() {
   program
     .command("init")
     .description("initialize Axiom project")
-    .option("-p, --path [path]", "file path")
-    .option("-s, --scaffold [type]", "type of scaffold (nextjs, script, forge, none)")
-    .option("-m, --manager [name]", "package manager to use (npm, yarn, pnpm)")
+    .option("-p, --path <path>", "file path")
+    .option("-s, --scaffold <type>", "type of scaffold (nextjs, script, forge, none)")
+    .option("-m, --manager <name>", "package manager to use (npm, yarn, pnpm)")
+    .option("-c, --chainId <number>", "chainId (default: 11155111)")
     .action(init);
 
   const scaffold = program.command("scaffold")
@@ -31,22 +32,25 @@ async function main() {
   scaffold
     .command("nextjs")
     .description("Scaffold a Next.js dApp that incorporates Axiom")
-    .option("-p, --path [path]", "Next.js dApp path")
-    .option("-m, --manager [name]", "package manager to use (npm, yarn, pnpm)")
+    .option("-p, --path <path>", "Next.js dApp path")
+    .option("-m, --manager <name>", "package manager to use (npm, yarn, pnpm)")
+    .option("-c, --chainId <number>", "chainId (default: 11155111)")
     .action(scaffoldNext)
 
   scaffold
     .command("script")
     .description("Scaffold a script to send Axiom Queries")
-    .option("-p, --path [path]", "Script path")
-    .option("-m, --manager [name]", "package manager to use (npm, yarn, pnpm)")
+    .option("-p, --path <path>", "Script path")
+    .option("-m, --manager <name>", "package manager to use (npm, yarn, pnpm)")
+    .option("-c, --chainId <number>", "chainId (default: 11155111)")
     .action(scaffoldScript)
 
   scaffold
     .command("forge")
     .description("Scaffold a Forge-only project")
-    .option("-p, --path [path]", "Forge project path")
-    .option("-m, --manager [name]", "package manager to use (npm, yarn, pnpm)")
+    .option("-p, --path <path>", "Forge project path")
+    .option("-m, --manager <name>", "package manager to use (npm, yarn, pnpm)")
+    .option("-c, --chainId <number>", "chainId (default: 11155111)")
     .action(scaffoldForge);
 
   program.parseAsync(process.argv);

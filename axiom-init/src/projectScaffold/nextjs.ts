@@ -8,6 +8,7 @@ export const scaffoldNext = async (
   options: {
     path: string,
     manager: string,
+    chainId: string,
   },
   _commands: any, // unused commands from commander.js
   sm?: ProjectScaffoldManager,
@@ -72,7 +73,7 @@ export const scaffoldNext = async (
     // Validate that the package manager the user has selected is installed
     validatePackageManager(options.manager);
 
-    sm = new ProjectScaffoldManager(options.path, options.manager);
+    sm = new ProjectScaffoldManager(options.path, options.manager, options.chainId);
   } else {
     // Set the ProjectScaffoldManager's path to the new path
     sm.setPath(options.path);

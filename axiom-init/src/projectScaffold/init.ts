@@ -12,6 +12,7 @@ export const init = async (
     path?: string,
     scaffold?: string,
     manager?: string,
+    chainId?: string,
   }
 ) => {
   // Check that user has installed forge
@@ -43,6 +44,17 @@ export const init = async (
         { title: "pnpm", value: "pnpm", description: "Use pnpm as the package manager" },
       ],
       message: "Which package manager do you want to use for the project?"
+    },
+    {
+      name: "chainId",
+      type: "select",
+      choices: [
+        { title: "11155111", value: "11155111", description: "Ethereum Sepolia (default)" }, 
+        { title: "84532", value: "84532", description: "Base Sepolia" },
+        { title: "1", value: "1", description: "Ethereum Mainnet" },
+        { title: "84532", value: "84532", description: "Base Mainnet" },
+      ],
+      message: "Which chain would you like your project to use?"
     }
   ];
 
@@ -85,6 +97,23 @@ export const init = async (
     });
   }
 
+  // Validate chainId answers in options
+  if (options.chainId !== undefined) {
+    const parsedChainId = options.chainId.trim().toLowerCase();
+    switch (parsedChainId) {
+      case "1":
+      case "11155111":
+      case "8453":
+      case "84532":
+        break;
+      default:
+        throw new Error("Invalid chainId. Valid options: [1, 11155111, 8453, 84532]");
+    }
+    setupQuestions = setupQuestions.filter((obj) => {
+      return obj.name !== "manager";
+    });
+  }
+
   let answers = await prompt(setupQuestions)
   
   if (answers.path === "") {
@@ -100,7 +129,7 @@ export const init = async (
   validatePackageManager(answers.manager);
 
   // Initialize scaffold manager
-  const sm = new ProjectScaffoldManager(answers.path, answers.manager);
+  const sm = new ProjectScaffoldManager(answers.path, answers.manager, answers.chainId);
 
   // Initialize project
   await scaffoldProject(sm, answers.scaffold);
