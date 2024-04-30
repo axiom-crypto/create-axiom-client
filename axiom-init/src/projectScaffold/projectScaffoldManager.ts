@@ -3,7 +3,8 @@ import fs from 'fs';
 import util from 'util';
 import childProcess from 'child_process';
 import chalk from 'chalk';
-import { getDevFlag, getInstallCmd } from './utils';
+import { findAndReplaceRecursive, getDevFlag, getInstallCmd } from './utils';
+import { AverageBalance, ExampleV2Client } from '../constants';
 const exec = util.promisify(childProcess.exec);
 
 export interface Action {
@@ -141,6 +142,26 @@ export class ProjectScaffoldManager {
     this.actions.push({
       description,
       status: fileExists ? chalk.red("ERR") : chalk.green("OK")
+    });
+  }
+
+  findAndReplaceAll(description: string) {
+      // Update chain ID
+    findAndReplaceRecursive(this.basePath, 'CHAIN_ID = "11155111"', `CHAIN_ID = "${this.chainId}"`);
+
+    // Update provider URI for Foundry
+    findAndReplaceRecursive(this.basePath, 'PROVIDER_URI_11155111', `PROVIDER_URI_${this.chainId}`);
+    findAndReplaceRecursive(this.basePath, 'RPC_URL_11155111', `RPC_URL_${this.chainId}`);
+
+    // Update ExampleV2Client target address 
+    findAndReplaceRecursive(this.basePath, "0x4A4e2D8f3fBb3525aD61db7Fc843c9bf097c362e", ExampleV2Client[this.chainId]);
+
+    // Update deployed Average contract address
+    findAndReplaceRecursive(this.basePath, "0x50F2D5c9a4A35cb922a631019287881f56A00ED5", AverageBalance[this.chainId]);
+
+    this.actions.push({
+      description,
+      status: chalk.green("OK")
     });
   }
 

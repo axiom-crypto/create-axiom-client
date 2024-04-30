@@ -1,11 +1,7 @@
-import fs from 'fs';
-import path from 'path';
 import prompt, { PromptObject } from 'prompts';
 import { validateForge, validatePackageManager } from './dependency';
-import { scaffoldNext } from './nextjs';
 import { scaffoldProject } from './project';
 import { ProjectScaffoldManager } from './projectScaffoldManager';
-import { CURRENT_VERSION } from '../version';
 import { filterQuestions, parseAnswer } from './utils';
 import { Options, Prompts } from '../constants';
 
