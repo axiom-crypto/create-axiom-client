@@ -4,7 +4,7 @@ import { PromptObject } from "prompts";
 export const Options: Record<string, string[]> = {
   scaffold: ["nextjs", "script", "forge"],
   manager: ["npm", "yarn", "pnpm"],
-  chainId: ["11155111", "84532", "1"],
+  chainId: ["11155111", "84532", "1" /*, "8453" */],
 };
 
 // deployed ExampleV2Client contract address
@@ -57,8 +57,8 @@ export const Prompts: Record<string, PromptObject> = {
       { title: "11155111", value: "11155111", description: "Ethereum Sepolia (default)" }, 
       { title: "84532", value: "84532", description: "Base Sepolia" },
       { title: "1", value: "1", description: "Ethereum Mainnet" },
-      { title: "8453", value: "8453", description: "Base Mainnet" },
+      // { title: "8453", value: "8453", description: "Base Mainnet" },
     ],
-    message: "Which chain would you like your project to use?"
+    message: "Which chain ID would you like your project to use?"
   }
 }

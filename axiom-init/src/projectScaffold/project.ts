@@ -48,7 +48,7 @@ export const scaffoldProject = async (sm: ProjectScaffoldManager, appScaffold: s
   }
 
   // Find and replace all
-  sm.findAndReplaceAll("  - Update chain data");
+  sm.findAndReplaceAll("Update chain data");
 
   // Remove cloned repo
   await sm.exec(`rm -rf ${tempDir}`, "Clean up build files");

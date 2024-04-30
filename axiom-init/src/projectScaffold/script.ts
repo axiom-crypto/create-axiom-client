@@ -83,7 +83,7 @@ export const scaffoldScript = async (
   sm.cp(`${tempAppDir}/.`, ".", `  - Copy files to ${chalk.bold(sm.basePath)}`);
 
   // Find and replace all
-  sm.findAndReplaceAll("  - Update chain data");
+  sm.findAndReplaceAll("Update chain data");
 
   // Clean up cloned repo
   await sm.exec(`rm -rf ${tempDir}`, "Clean up build files");

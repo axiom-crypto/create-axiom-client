@@ -55,7 +55,10 @@ export const findAndReplaceRecursive = (folder: string, find: string, replace: s
     const filePath = path.join(folder, file);
     const stat = fs.statSync(filePath);
     if (stat.isDirectory()) {
-      findAndReplaceRecursive(filePath, find, replace);
+      // Skip directories that start with a dot
+      if (!file.startsWith('.')) {
+        findAndReplaceRecursive(filePath, find, replace);
+      }
     } else {
       let content = fs.readFileSync(filePath, "utf8");
       content = content.replace(new RegExp(find, "g"), replace);

@@ -147,17 +147,20 @@ export class ProjectScaffoldManager {
 
   findAndReplaceAll(description: string) {
       // Update chain ID
-    findAndReplaceRecursive(this.basePath, 'CHAIN_ID = "11155111"', `CHAIN_ID = "${this.chainId}"`);
+    findAndReplaceRecursive(this.fullPath, 'CHAIN_ID = "11155111"', `CHAIN_ID = "${this.chainId}"`);
 
     // Update provider URI for Foundry
-    findAndReplaceRecursive(this.basePath, 'PROVIDER_URI_11155111', `PROVIDER_URI_${this.chainId}`);
-    findAndReplaceRecursive(this.basePath, 'RPC_URL_11155111', `RPC_URL_${this.chainId}`);
+    findAndReplaceRecursive(this.fullPath, 'PROVIDER_URI_11155111', `PROVIDER_URI_${this.chainId}`);
+    findAndReplaceRecursive(this.fullPath, 'RPC_URL_11155111', `RPC_URL_${this.chainId}`);
+
+    // Update private key
+    findAndReplaceRecursive(this.fullPath, 'PRIVATE_KEY_11155111', `PRIVATE_KEY_${this.chainId}`);
 
     // Update ExampleV2Client target address 
-    findAndReplaceRecursive(this.basePath, "0x4A4e2D8f3fBb3525aD61db7Fc843c9bf097c362e", ExampleV2Client[this.chainId]);
+    findAndReplaceRecursive(this.fullPath, "0x4A4e2D8f3fBb3525aD61db7Fc843c9bf097c362e", ExampleV2Client[this.chainId]);
 
     // Update deployed Average contract address
-    findAndReplaceRecursive(this.basePath, "0x50F2D5c9a4A35cb922a631019287881f56A00ED5", AverageBalance[this.chainId]);
+    findAndReplaceRecursive(this.fullPath, "0x50F2D5c9a4A35cb922a631019287881f56A00ED5", AverageBalance[this.chainId]);
 
     this.actions.push({
       description,
