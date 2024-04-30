@@ -4,7 +4,7 @@ import { PromptObject } from "prompts";
 export const Options: Record<string, string[]> = {
   scaffold: ["nextjs", "script", "forge"],
   manager: ["npm", "yarn", "pnpm"],
-  chainId: ["1", "11155111", "8453", "84532"],
+  chainId: ["11155111", "84532", "1"],
 };
 
 // deployed ExampleV2Client contract address
@@ -19,8 +19,8 @@ export const ExampleV2Client: Record<string, string> = {
 export const AverageBalance: Record<string, string> = {
   "1": "",
   "11155111": "0x50F2D5c9a4A35cb922a631019287881f56A00ED5",
-  "8453": "",
-  "84532": "",
+  "8453": "0xd08F7cE9d0De90dB17B33E1ff747ec515aB63747",
+  "84532": "0xC094A594bFd60abc521f5e033e4F681Cc87530f0.",
 };
 
 
