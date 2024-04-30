@@ -2,8 +2,8 @@ import chalk from 'chalk';
 import prompt, { PromptObject } from 'prompts';
 import { ProjectScaffoldManager } from "./projectScaffoldManager";
 import { validatePackageManager } from './dependency';
-import { AverageBalance, ExampleV2Client, Options, Prompts } from '../constants';
-import { filterQuestions, findAndReplaceRecursive, parseAnswer } from './utils';
+import { Options, Prompts } from '../constants';
+import { filterQuestions, parseAnswer } from './utils';
 
 export const scaffoldNext = async (
   options: {
@@ -81,17 +81,8 @@ export const scaffoldNext = async (
   console.log("Installing Next.js scaffold dependencies...");
   await sm.execWithStream(sm.manager, [sm.installCmd], `Install Next.js scaffold dependencies`);
 
-  // Update chain ID
-  findAndReplaceRecursive(sm.basePath, 'CHAIN_ID = "11155111"', `CHAIN_ID = "${sm.chainId}"`);
-
-  // Update provider URI for Foundry
-  findAndReplaceRecursive(sm.basePath, 'PROVIDER_URI_11155111', `PROVIDER_URI_${sm.chainId}`);
-
-  // Update ExampleV2Client target address 
-  findAndReplaceRecursive(sm.basePath, "0x4A4e2D8f3fBb3525aD61db7Fc843c9bf097c362e", ExampleV2Client[sm.chainId]);
-
-  // Update deployed Average contract address
-  findAndReplaceRecursive(sm.basePath, "0x50F2D5c9a4A35cb922a631019287881f56A00ED5", AverageBalance[sm.chainId]);
+  // Find and replace all
+  sm.findAndReplaceAll("  - Update chain data");
 
   // Clean up cloned repo
   await sm.exec(`rm -rf ${tempDir}`, "Clean up build files");

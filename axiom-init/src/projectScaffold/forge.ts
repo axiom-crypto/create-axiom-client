@@ -3,7 +3,7 @@ import chalk from 'chalk';
 import prompt, { PromptObject } from 'prompts';
 import { ProjectScaffoldManager } from "./projectScaffoldManager"
 import { validatePackageManager } from "./dependency";
-import { filterQuestions, findAndReplaceRecursive, parseAnswer } from './utils';
+import { filterQuestions, parseAnswer } from './utils';
 import { Options, Prompts } from '../constants';
 
 export const scaffoldForge = async (
@@ -84,13 +84,9 @@ export const scaffoldForge = async (
   // Copy files to target path
   sm.cp(`${tempDir}/.`, ".", `  - Copy files to ${chalk.bold(sm.basePath)}`);
 
+  // Find and replace all
+  sm.findAndReplaceAll("  - Update chain data");
 
-  // Update chain ID
-  findAndReplaceRecursive(sm.basePath, 'CHAIN_ID = "11155111"', `CHAIN_ID = "${sm.chainId}"`);
-
-  // Update provider URI for Foundry
-  findAndReplaceRecursive(sm.basePath, 'PROVIDER_URI_11155111', `PROVIDER_URI_${sm.chainId}`);
-  
   // Clean up cloned repo
   await sm.exec(`rm -rf ${tempDir}`, "Clean up build files");
 
