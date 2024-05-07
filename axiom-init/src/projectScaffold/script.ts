@@ -84,15 +84,15 @@ export const scaffoldScript = async (
   // Initialize git repo
   await sm.exec("git init", "Initialize git repository");
 
-  // Install package dependencies
-  console.log("Installing package dependencies...");
-  await sm.execWithStream(sm.manager, [sm.installCmd], `Install package dependencies`);
-
   // Install axiom-std
   await sm.exec("forge install axiom-crypto/axiom-std --no-commit", "Install axiom-std");
 
   // Find and replace all
   sm.findAndReplaceAll("Update chain data");
+
+  // Install package dependencies
+  console.log("Installing package dependencies...");
+  await sm.execWithStream(sm.manager, [sm.installCmd], `Install package dependencies`);
 
   // Clean up cloned repo
   await sm.exec(`rm -rf ${tempDir}`, "Clean up build files");

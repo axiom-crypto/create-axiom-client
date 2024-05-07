@@ -86,10 +86,6 @@ export const scaffoldForge = async (
   // Remove lib folder from cloned quickstart scaffold
   await sm.rm("lib", `  - Remove lib folder from cloned quickstart scaffold`);
 
-  // Install package dependencies
-  console.log("Installing package dependencies...");
-  await sm.execWithStream(sm.manager, [sm.installCmd], `Install package dependencies`);
-
   // Initialize git repo
   await sm.exec("git init", "Initialize git repository");
 
@@ -98,6 +94,10 @@ export const scaffoldForge = async (
 
   // Find and replace all
   sm.findAndReplaceAll("Update chain data");
+
+  // Install package dependencies
+  console.log("Installing package dependencies...");
+  await sm.execWithStream(sm.manager, [sm.installCmd], `Install package dependencies`);
 
   // Clean up cloned repo
   await sm.exec(`rm -rf ${tempDir}`, "Clean up build files");

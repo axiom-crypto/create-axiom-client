@@ -93,12 +93,12 @@ export const scaffoldNext = async (
   // Remove .git folder from scaffold repo
   await sm.rm(".git", `  - Remove .git folder from Next.js scaffold`);
 
+  // Find and replace all
+  sm.findAndReplaceAll("Update chain data");
+
   // Install package dependencies
   console.log("Installing Next.js scaffold dependencies...");
   await sm.execWithStream(sm.manager, [sm.installCmd], `Install Next.js scaffold dependencies`);
-
-  // Find and replace all
-  sm.findAndReplaceAll("Update chain data");
 
   // cd back to starting path
   process.chdir(startingPath);

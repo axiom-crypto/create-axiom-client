@@ -8,7 +8,7 @@ export const getInstallCmd = (manager: string): string => {
     case "pnpm":
       return "install";
     case "yarn":
-      return "add";
+      return "";
     default:
       throw new Error(`Unsupported package manager ${manager}`);
   }
