@@ -1,0 +1,52 @@
+name: "Test app initialization"
+on:
+  workflow_dispatch:
+  push:
+  pull_request:
+    branches:
+        - main
+        - staging
+
+env:
+    RPC_URL_11155111: ${{ secrets.RPC_URL_11155111 }}
+    RPC_URL_8453: ${{ secrets.RPC_URL_8453 }}
+    RPC_URL_84532: ${{ secrets.RPC_URL_84532 }}
+    PRIVATE_KEY_11155111: ${{ secrets.PRIVATE_KEY_11155111 }}
+    PRIVATE_KEY_8453: ${{ secrets.PRIVATE_KEY_8453 }}
+    PRIVATE_KEY_84532: ${{ secrets.PRIVATE_KEY_84532 }}
+
+jobs:
+  test:
+    name: "axiom-init: Next.js"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly
+
+      - name: Check forge version
+        run: forge --version
+
+      - name: Initialize app
+        run: node dist/index.js -p app-nextjs -s nextjs -m npm -c 11155111
+
+      - name: Forge test
+        working-directory: ./app-nextjs
+        run: forge test -vvv
+
+      - name: Compile circuit
+        working-directory: ./app-nextjs
+        run: npm run axiom circuit compile app/axiom/average.circuit.ts -p ${{ env.RPC_URL_11155111 }} --force
+
+      - name: Build Next.js app
+        working-directory: ./app-nextjs/app
+        run: npm run build
