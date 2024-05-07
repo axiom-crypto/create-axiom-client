@@ -86,7 +86,6 @@ jobs:
           submodules: recursive
 
       - name: Enable Corepack
-        uses: actions/checkout@v4
         run: corepack enable
       
       - name: Use Node.js 20.x
