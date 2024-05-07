@@ -36,6 +36,10 @@ jobs:
       - name: Check forge version
         run: forge --version
 
+      - name: Install NPM packages
+        working-directory: ./axiom-init
+        run: npm install
+
       - name: Build app
         working-directory: ./axiom-init
         run: npm run build
