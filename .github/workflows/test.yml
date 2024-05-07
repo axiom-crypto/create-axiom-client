@@ -36,6 +36,9 @@ jobs:
       - name: Check forge version
         run: forge --version
 
+      - name: Build app
+        run: npm run build
+
       - name: Initialize app
         run: node dist/index.js -p app-nextjs -s nextjs -m npm -c 11155111
 
