@@ -11,6 +11,9 @@ env:
     RPC_URL_11155111: ${{ secrets.RPC_URL_11155111 }}
     RPC_URL_8453: ${{ secrets.RPC_URL_8453 }}
     RPC_URL_84532: ${{ secrets.RPC_URL_84532 }}
+    PROVIDER_URI_11155111: ${{ secrets.RPC_URL_11155111 }}
+    PROVIDER_URI_8453: ${{ secrets.RPC_URL_8453 }}
+    PROVIDER_URI_84532: ${{ secrets.RPC_URL_84532 }}
     PRIVATE_KEY_11155111: ${{ secrets.PRIVATE_KEY_11155111 }}
     PRIVATE_KEY_8453: ${{ secrets.PRIVATE_KEY_8453 }}
     PRIVATE_KEY_84532: ${{ secrets.PRIVATE_KEY_84532 }}
