@@ -46,7 +46,7 @@ jobs:
 
       - name: Initialize app
         working-directory: ./axiom-init
-        run: node dist/index.js -p app-nextjs -s nextjs -m npm -c 11155111
+        run: node dist/index.js init -p app-nextjs -s nextjs -m npm -c 11155111
 
       - name: Forge test
         working-directory: ./axiom-init/app-nextjs
