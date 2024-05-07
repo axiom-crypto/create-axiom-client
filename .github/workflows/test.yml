@@ -57,7 +57,7 @@ jobs:
 
       - name: Compile circuit
         working-directory: ./axiom-init/app-nextjs
-        run: npm run axiom circuit compile app/axiom/average.circuit.ts -p ${{ env.RPC_URL_11155111 }} --force
+        run: npx axiom circuit compile app/axiom/average.circuit.ts -p ${{ env.RPC_URL_11155111 }} --force
 
       - name: Build Next.js app
         working-directory: ./axiom-init/app-nextjs/app
