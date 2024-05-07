@@ -44,7 +44,7 @@ export const scaffoldForge = async (
     let answers = await prompt(setupQuestions)
     
     if (answers.path === "") {
-      answers.path = "./axiom-quickstart";
+      answers.path = "axiom-quickstart";
     }
 
     options = {
@@ -56,9 +56,6 @@ export const scaffoldForge = async (
     validatePackageManager(options.manager);
 
     sm = new ProjectScaffoldManager(options.path, options.manager, options.chainId);
-  } else {
-    // Set the ProjectScaffoldManager's path to the new path
-    sm.setPath(options.path);
   }
 
   const startingPath = process.cwd();
@@ -74,15 +71,30 @@ export const scaffoldForge = async (
 
   // Clone the axiom-quickstart template
   console.log("Fetching Axiom quickstart template...");
-  const tempDir = `.axiom-temp-${Date.now()}`; 
+  const tempDir = `.axiom-temp-${Date.now()}`;
   await sm.exec(`git clone --depth 1 https://github.com/axiom-crypto/axiom-quickstart.git ${tempDir}`, "Clone Axiom quickstart template");
 
-
-  // Delete the 'app' folder
-  await sm.exec(`rm -rf ${path.join(tempDir, "app")}`, "  - Process template");
+  // Delete .ts files in app folder (not recursive)
+  await sm.exec(`find ${path.join(tempDir, "app")} -maxdepth 1 -type f -name "*.ts" -delete`, "  - Process template");
 
   // Copy files to target path
   sm.cp(`${tempDir}/.`, ".", `  - Copy files to ${chalk.bold(sm.basePath)}`);
+
+  // Remove .git folder from cloned quickstart scaffold
+  await sm.rm(".git", `  - Remove .git folder from cloned quickstart scaffold`);
+
+  // Remove lib folder from cloned quickstart scaffold
+  await sm.rm("lib", `  - Remove lib folder from cloned quickstart scaffold`);
+
+  // Install package dependencies
+  console.log("Installing package dependencies...");
+  await sm.execWithStream(sm.manager, [sm.installCmd], `Install package dependencies`);
+
+  // Initialize git repo
+  await sm.exec("git init", "Initialize git repository");
+
+  // Install axiom-std
+  await sm.exec("forge install axiom-crypto/axiom-std --no-commit", "Install axiom-std");
 
   // Find and replace all
   sm.findAndReplaceAll("Update chain data");

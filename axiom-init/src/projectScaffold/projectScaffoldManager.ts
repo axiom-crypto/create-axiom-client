@@ -13,6 +13,7 @@ export interface Action {
 }
 
 export class ProjectScaffoldManager {
+  createPath: string;
   basePath: string;
   fullPath: string;
   manager: string;
@@ -22,6 +23,7 @@ export class ProjectScaffoldManager {
   actions: Action[];
 
   constructor(basePath: string, manager: string, chainId: string) {
+    this.createPath = path.resolve(basePath);
     this.basePath = basePath;
     this.fullPath = path.resolve(basePath);
     this.manager = manager;
@@ -34,6 +36,7 @@ export class ProjectScaffoldManager {
   setPath(newPath: string) {
     this.basePath = newPath;
     this.fullPath = path.resolve(newPath);
+    process.chdir(this.fullPath);
   }
 
   exists(inputPath: string, description: string): boolean {
@@ -173,5 +176,6 @@ export class ProjectScaffoldManager {
     this.actions.forEach((action) => {
       console.log(`[${chalk.bold(action.status)}]\t${action.description}`);
     })
+    console.log(`Project initialized at ${chalk.bold(this.createPath)}`);
   }
 }

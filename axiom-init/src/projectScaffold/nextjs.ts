@@ -4,6 +4,7 @@ import { ProjectScaffoldManager } from "./projectScaffoldManager";
 import { validatePackageManager } from './dependency';
 import { Options, Prompts } from '../constants';
 import { filterQuestions, parseAnswer } from './utils';
+import { scaffoldScript } from './script';
 
 export const scaffoldNext = async (
   options: {
@@ -43,7 +44,7 @@ export const scaffoldNext = async (
     let answers = await prompt(setupQuestions)
     
     if (answers.path === "") {
-      answers.path = "./app";
+      answers.path = "axiom-quickstart";
     }
 
     options = {
@@ -55,27 +56,42 @@ export const scaffoldNext = async (
     validatePackageManager(options.manager);
 
     sm = new ProjectScaffoldManager(options.path, options.manager, options.chainId);
-  } else {
-    // Set the ProjectScaffoldManager's path to the new path
-    sm.setPath(options.path);
   }
   
   const startingPath = process.cwd();
 
-  // Create folder if it doesn't exist
-  if (sm.exists(".", `Directory ${chalk.bold(sm.basePath)} exists?`)) {
-    throw new Error("Please select an empty directory");
-  }
-  sm.mkdir(".", `  - Create directory ${chalk.bold(sm.basePath)}`);
+  await scaffoldScript({ path: sm.basePath, manager: sm.manager, chainId: sm.chainId }, undefined, sm);
 
-  // Move to base path
-  process.chdir(sm.basePath);
+  sm.setPath(sm.basePath);
+
+  // Delete app folder
+  const appPath = "app";
+  await sm.rm(appPath, `  - Remove cloned quickstart scaffold's ${chalk.bold(appPath)} folder`);
+
+  // Update root package.json to remove start script
+  const rootPackageJson = sm.readFile("package.json");
+  if (rootPackageJson) {
+    const packageJsonObj = JSON.parse(rootPackageJson);
+    if (packageJsonObj.scripts && packageJsonObj.scripts.start) {
+      delete packageJsonObj.scripts.start;
+      sm.writeFile("package.json", JSON.stringify(packageJsonObj, null, 2));
+    }
+  }
 
   // Clone the Next.js scaffold
   console.log("Fetching Axiom Next.js scaffold...");
-  const tempDir = `.axiom-temp-${Date.now()}`; 
+  const tempDir = `.axiom-temp-nextjs-${Date.now()}`; 
   await sm.exec(`git clone --depth 1 https://github.com/axiom-crypto/axiom-scaffold-nextjs.git ${tempDir}`, "Clone Axiom Next.js scaffold");
-  sm.cp(`${tempDir}/.`, ".", `  - Copy Next.js scaffold files to ${chalk.bold(sm.basePath)}`);
+  sm.cp(`${tempDir}/.`, appPath, `  - Copy Next.js scaffold files to ${chalk.bold(appPath)}`);
+
+  // Clean up cloned repo
+  await sm.exec(`rm -rf ${tempDir}`, "Clean up next.js build files");
+
+  // Move to base path
+  sm.setPath(appPath);
+
+  // Remove .git folder from scaffold repo
+  await sm.rm(".git", `  - Remove .git folder from Next.js scaffold`);
 
   // Install package dependencies
   console.log("Installing Next.js scaffold dependencies...");
@@ -84,10 +100,7 @@ export const scaffoldNext = async (
   // Find and replace all
   sm.findAndReplaceAll("Update chain data");
 
-  // Clean up cloned repo
-  await sm.exec(`rm -rf ${tempDir}`, "Clean up build files");
-
-  // Move back to starting path
+  // cd back to starting path
   process.chdir(startingPath);
 
   if (shouldPrint) {
