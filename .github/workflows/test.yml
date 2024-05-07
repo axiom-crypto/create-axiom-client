@@ -1,8 +1,8 @@
 name: "Test app initialization"
 on:
   workflow_dispatch:
-  push:
   pull_request:
+  push:
     branches:
         - main
         - staging
@@ -37,19 +37,21 @@ jobs:
         run: forge --version
 
       - name: Build app
+        working-directory: ./axiom-init
         run: npm run build
 
       - name: Initialize app
+        working-directory: ./axiom-init
         run: node dist/index.js -p app-nextjs -s nextjs -m npm -c 11155111
 
       - name: Forge test
-        working-directory: ./app-nextjs
+        working-directory: ./axiom-init/app-nextjs
         run: forge test -vvv
 
       - name: Compile circuit
-        working-directory: ./app-nextjs
+        working-directory: ./axiom-init/app-nextjs
         run: npm run axiom circuit compile app/axiom/average.circuit.ts -p ${{ env.RPC_URL_11155111 }} --force
 
       - name: Build Next.js app
-        working-directory: ./app-nextjs/app
+        working-directory: ./axiom-init/app-nextjs/app
         run: npm run build
