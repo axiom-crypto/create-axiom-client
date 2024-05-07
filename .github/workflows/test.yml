@@ -78,7 +78,7 @@ jobs:
         run: npm run build
 
   test-script:
-    name: "axiom-init: Next.js"
+    name: "axiom-init: Script"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -93,6 +93,10 @@ jobs:
         with:
           node-version: '20.x'
           cache: 'yarn'
+      
+      - name: Install yarn packages
+        working-directory: ./axiom-init
+        run: yarn install --no-lockfile
 
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
@@ -102,33 +106,88 @@ jobs:
       - name: Check forge version
         run: forge --version
 
-      - name: Install npm packages
-        working-directory: ./axiom-init
-        run: npm install
-
       - name: Build axiom-init
         working-directory: ./axiom-init
-        run: npm run build
+        run: yarn build
 
       - name: Initialize app
         working-directory: ./axiom-init
-        run: node dist/index.js init -p app-yarn -s yarn -m npm -c 84532
+        run: node dist/index.js init -p app-script -s script -m yarn -c 84532
 
       - name: Forge test
-        working-directory: ./axiom-init/app-yarn
+        working-directory: ./axiom-init/app-script
         run: forge test -vvv
 
       - name: Compile circuit
-        working-directory: ./axiom-init/app-yarn
+        working-directory: ./axiom-init/app-script
         run: npx axiom circuit compile app/axiom/average.circuit.ts -p ${{ env.RPC_URL_84532 }} --force
 
       - name: Write .env file
-        working-directory: ./axiom-init/app-yarn
+        working-directory: ./axiom-init/app-script
         run: |
           echo "RPC_URL_84532=${{ env.RPC_URL_84532 }}" > .env
           echo "PROVIDER_URI_84532=${{ env.PROVIDER_URI_84532 }}" >> .env
 
       - name: Send query
-        working-directory: ./axiom-init/app-yarn/app
+        working-directory: ./axiom-init/app-script/app
+        run: yarn start
+      
+  test-forge:
+    name: "axiom-init: Forge"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8
+
+      - name: "Install Node.js"
+        uses: "actions/setup-node@v4"
+        with:
+          node-version: "20.x"
+          cache: "pnpm"
+          registry-url: "https://registry.npmjs.org"
+          cache-dependency-path: axiom-init/pnpm-lock.yaml
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly
+
+      - name: Check forge version
+        run: forge --version
+
+      - name: Install pnpm packages
+        working-directory: ./axiom-init
+        run: pnpm install
+
+      - name: Build axiom-init
+        working-directory: ./axiom-init
+        run: pnpm run build
+
+      - name: Initialize app
+        working-directory: ./axiom-init
+        run: node dist/index.js init -p app-forge -s forge -m pnpm -c 8453
+
+      - name: Forge test
+        working-directory: ./axiom-init/app-forge
+        run: forge test -vvv
+
+      - name: Compile circuit
+        working-directory: ./axiom-init/app-forge
+        run: npx axiom circuit compile app/axiom/average.circuit.ts -p ${{ env.RPC_URL_8453 }} --force
+
+      - name: Write .env file
+        working-directory: ./axiom-init/app-forge
+        run: |
+          echo "RPC_URL_8453=${{ env.RPC_URL_8453 }}" > .env
+          echo "PROVIDER_URI_8453=${{ env.PROVIDER_URI_8453 }}" >> .env
+
+      - name: Send query
+        working-directory: ./axiom-init/app-forge/app
         run: yarn start
       
