@@ -9,7 +9,6 @@
 /out/
 
 # production
-pnpm-lock.yaml
 /dist
 
 # misc
