@@ -1,0 +1,570 @@
+name: "Test app initialization"
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches:
+        - main
+        - staging
+
+env:
+    RPC_URL_1: ${{ secrets.RPC_URL_1 }}
+    RPC_URL_11155111: ${{ secrets.RPC_URL_11155111 }}
+    RPC_URL_8453: ${{ secrets.RPC_URL_8453 }}
+    RPC_URL_84532: ${{ secrets.RPC_URL_84532 }}
+    PROVIDER_URI_1: ${{ secrets.RPC_URL_1 }}
+    PROVIDER_URI_11155111: ${{ secrets.RPC_URL_11155111 }}
+    PROVIDER_URI_8453: ${{ secrets.RPC_URL_8453 }}
+    PROVIDER_URI_84532: ${{ secrets.RPC_URL_84532 }}
+    PRIVATE_KEY_11155111: ${{ secrets.PRIVATE_KEY_11155111 }}
+    PRIVATE_KEY_8453: ${{ secrets.PRIVATE_KEY_8453 }}
+    PRIVATE_KEY_84532: ${{ secrets.PRIVATE_KEY_84532 }}
+    NEXT_PUBLIC_RPC_URL_11155111: ${{ secrets.RPC_URL_11155111 }}
+    NEXT_PUBLIC_RPC_URL_8453: ${{ secrets.RPC_URL_8453 }}
+    NEXT_PUBLIC_RPC_URL_84532: ${{ secrets.RPC_URL_84532 }}
+    NEXT_PUBLIC_PROVIDER_URI_11155111: ${{ secrets.RPC_URL_11155111 }}
+    NEXT_PUBLIC_PROVIDER_URI_8453: ${{ secrets.RPC_URL_8453 }}
+    NEXT_PUBLIC_PROVIDER_URI_84532: ${{ secrets.RPC_URL_84532 }}
+    NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID: ${{ secrets.WALLETCONNECT_PROJECT_ID }}
+
+jobs:
+  
+  ##
+  # Next.js tests
+  #
+
+  test-nextjs-npm:
+    name: "axiom-init: Next.js (npm)"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Set Git user
+        run: |
+          git config --global user.name "Axiom CI"
+          git config --global user.email "ci@axiom.xyz"
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly
+
+      - name: Check forge version
+        run: forge --version
+
+      - name: Install npm packages
+        working-directory: ./axiom-init
+        run: npm install
+
+      - name: Build axiom-init
+        working-directory: ./axiom-init
+        run: npm run build
+
+      - name: Initialize app
+        working-directory: ./axiom-init
+        run: node dist/index.js init -p app-nextjs -s nextjs -m npm -c 11155111
+
+      - name: Compile circuit
+        working-directory: ./axiom-init/app-nextjs
+        run: npx axiom circuit compile app/axiom/average.circuit.ts -p ${{ env.RPC_URL_11155111 }} --force
+
+      - name: Forge test
+        working-directory: ./axiom-init/app-nextjs
+        run: forge test -vvv
+
+      - name: Write .env.local file
+        working-directory: ./axiom-init/app-nextjs/app
+        run: |
+          echo "NEXT_PUBLIC_RPC_URL_11155111=${{ env.RPC_URL_11155111 }}" > .env.local
+          echo "NEXT_PUBLIC_PROVIDER_URI_11155111=${{ env.RPC_URL_11155111 }}" >> .env.local
+          echo "NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=${{ env.WALLETCONNECT_PROJECT_ID }}" >> .env.local
+
+      - name: Build Next.js app
+        working-directory: ./axiom-init/app-nextjs/app
+        run: npm run build
+
+  test-nextjs-yarn:
+    name: "axiom-init: Next.js (yarn)"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      
+      - name: Enable Corepack
+        run: corepack enable
+      
+      - name: Use Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'yarn'
+          registry-url: "https://registry.npmjs.org"
+          cache-dependency-path: axiom-init/yarn.lock
+      
+      - name: Install yarn packages
+        working-directory: ./axiom-init
+        run: yarn --no-lockfile
+      
+      - name: Set Git user
+        run: |
+          git config --global user.name "Axiom CI"
+          git config --global user.email "ci@axiom.xyz"
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly
+
+      - name: Check forge version
+        run: forge --version
+
+      - name: Install yarn packages
+        working-directory: ./axiom-init
+        run: yarn
+
+      - name: Build axiom-init
+        working-directory: ./axiom-init
+        run: yarn build
+
+      - name: Initialize app
+        working-directory: ./axiom-init
+        run: node dist/index.js init -p app-nextjs -s nextjs -m yarn -c 11155111
+
+      - name: Compile circuit
+        working-directory: ./axiom-init/app-nextjs
+        run: yarn axiom circuit compile app/axiom/average.circuit.ts -p ${{ env.RPC_URL_11155111 }} --force
+
+      - name: Forge test
+        working-directory: ./axiom-init/app-nextjs
+        run: forge test -vvv
+
+      - name: Write .env.local file
+        working-directory: ./axiom-init/app-nextjs/app
+        run: |
+          echo "NEXT_PUBLIC_RPC_URL_11155111=${{ env.RPC_URL_11155111 }}" > .env.local
+          echo "NEXT_PUBLIC_PROVIDER_URI_11155111=${{ env.RPC_URL_11155111 }}" >> .env.local
+          echo "NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=${{ env.WALLETCONNECT_PROJECT_ID }}" >> .env.local
+
+      - name: Build Next.js app
+        working-directory: ./axiom-init/app-nextjs/app
+        run: yarn build
+  
+  test-nextjs-pnpm:
+    name: "axiom-init: Next.js (pnpm)"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      
+      - name: Enable Corepack
+        run: corepack enable
+      
+      - name: Use Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'pnpm'
+          registry-url: "https://registry.npmjs.org"
+          cache-dependency-path: axiom-init/pnpm-lock.yaml
+      
+      - name: Install pnpm packages
+        working-directory: ./axiom-init
+        run: pnpm install --no-lockfile
+      
+      - name: Set Git user
+        run: |
+          git config --global user.name "Axiom CI"
+          git config --global user.email "ci@axiom.xyz"
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly
+
+      - name: Check forge version
+        run: forge --version
+
+      - name: Install pnpm packages
+        working-directory: ./axiom-init
+        run: pnpm install
+
+      - name: Build axiom-init
+        working-directory: ./axiom-init
+        run: pnpm run build
+
+      - name: Initialize app
+        working-directory: ./axiom-init
+        run: node dist/index.js init -p app-nextjs -s nextjs -m pnpm -c 84532
+
+      - name: Compile circuit
+        working-directory: ./axiom-init/app-nextjs
+        run: pnpm axiom circuit compile app/axiom/average.circuit.ts -p ${{ env.RPC_URL_84532 }} --force
+
+      - name: Forge test
+        working-directory: ./axiom-init/app-nextjs
+        run: forge test -vvv
+
+      - name: Write .env.local file
+        working-directory: ./axiom-init/app-nextjs/app
+        run: |
+          echo "NEXT_PUBLIC_RPC_URL_84532=${{ env.RPC_URL_84532 }}" > .env.local
+          echo "NEXT_PUBLIC_PROVIDER_URI_84532=${{ env.RPC_URL_84532 }}" >> .env.local
+          echo "NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=${{ env.WALLETCONNECT_PROJECT_ID }}" >> .env.local
+
+      - name: Build Next.js app
+        working-directory: ./axiom-init/app-nextjs/app
+        run: pnpm build
+  
+
+  ##
+  # Script tests
+  #
+
+  test-script-npm:
+    name: "axiom-init: Script (npm)"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Set Git user
+        run: |
+          git config --global user.name "Axiom CI"
+          git config --global user.email "ci@axiom.xyz"
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly
+
+      - name: Check forge version
+        run: forge --version
+
+      - name: Install npm packages
+        working-directory: ./axiom-init
+        run: npm install
+
+      - name: Build axiom-init
+        working-directory: ./axiom-init
+        run: npm run build
+
+      - name: Initialize app
+        working-directory: ./axiom-init
+        run: node dist/index.js init -p app-script -s script -m npm -c 84532
+
+      - name: Compile circuit
+        working-directory: ./axiom-init/app-script
+        run: npx axiom circuit compile app/axiom/average.circuit.ts -p ${{ env.RPC_URL_84532 }} --force
+
+      - name: Forge test
+        working-directory: ./axiom-init/app-script
+        run: forge test -vvv
+
+      - name: Write .env file
+        working-directory: ./axiom-init/app-script
+        run: |
+          echo "RPC_URL_84532=${{ env.RPC_URL_84532 }}" > .env
+          echo "PROVIDER_URI_84532=${{ env.PROVIDER_URI_84532 }}" >> .env
+
+      - name: Send query
+        working-directory: ./axiom-init/app-script/app
+        run: npm run start
+
+  test-script-yarn:
+    name: "axiom-init: Script (yarn)"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Enable Corepack
+        run: corepack enable
+      
+      - name: Use Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'yarn'
+          registry-url: "https://registry.npmjs.org"
+          cache-dependency-path: axiom-init/yarn.lock
+      
+      - name: Install yarn packages
+        working-directory: ./axiom-init
+        run: yarn --no-lockfile
+
+      - name: Set Git user
+        run: |
+          git config --global user.name "Axiom CI"
+          git config --global user.email "ci@axiom.xyz"
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly
+
+      - name: Check forge version
+        run: forge --version
+
+      - name: Build axiom-init
+        working-directory: ./axiom-init
+        run: yarn build
+
+      - name: Initialize app
+        working-directory: ./axiom-init
+        run: node dist/index.js init -p app-script -s script -m yarn -c 11155111
+
+      - name: Compile circuit
+        working-directory: ./axiom-init/app-script
+        run: npx axiom circuit compile app/axiom/average.circuit.ts -p ${{ env.RPC_URL_11155111 }} --force
+
+      - name: Forge test
+        working-directory: ./axiom-init/app-script
+        run: forge test -vvv
+
+      - name: Write .env file
+        working-directory: ./axiom-init/app-script
+        run: |
+          echo "RPC_URL_11155111=${{ env.RPC_URL_11155111 }}" > .env
+          echo "PROVIDER_URI_11155111=${{ env.PROVIDER_URI_11155111 }}" >> .env
+
+      - name: Send query
+        working-directory: ./axiom-init/app-script/app
+        run: yarn start
+
+  test-script-pnpm:
+    name: "axiom-init: Script (pnpm)"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Enable Corepack
+        run: corepack enable
+      
+      - name: Use Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'pnpm'
+          registry-url: "https://registry.npmjs.org"
+          cache-dependency-path: axiom-init/pnpm-lock.yaml
+      
+      - name: Install pnpm packages
+        working-directory: ./axiom-init
+        run: pnpm install --no-lockfile
+
+      - name: Set Git user
+        run: |
+          git config --global user.name "Axiom CI"
+          git config --global user.email "ci@axiom.xyz"
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly
+
+      - name: Check forge version
+        run: forge --version
+
+      - name: Build axiom-init
+        working-directory: ./axiom-init
+        run: pnpm build
+
+      - name: Initialize app
+        working-directory: ./axiom-init
+        run: node dist/index.js init -p app-script -s script -m pnpm -c 1
+
+      - name: Compile circuit
+        working-directory: ./axiom-init/app-script
+        run: pnpm axiom circuit compile app/axiom/average.circuit.ts -p ${{ env.RPC_URL_1 }} --force
+
+      - name: Forge test
+        working-directory: ./axiom-init/app-script
+        run: forge test -vvv
+
+      # - name: Write .env file
+      #   working-directory: ./axiom-init/app-script
+      #   run: |
+      #     echo "RPC_URL_1=${{ env.RPC_URL_1 }}" > .env
+      #     echo "PROVIDER_URI_1=${{ env.PROVIDER_URI_1 }}" >> .env
+
+      # - name: Send query
+      #   working-directory: ./axiom-init/app-script/app
+      #   run: pnpm start
+      
+
+  ##
+  # Forge-only tests
+  #
+
+  test-forge-npm:
+    name: "axiom-init: Forge (npm)"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Set Git user
+        run: |
+          git config --global user.name "Axiom CI"
+          git config --global user.email "ci@axiom.xyz"
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly
+
+      - name: Check forge version
+        run: forge --version
+
+      - name: Install npm packages
+        working-directory: ./axiom-init
+        run: npm install
+
+      - name: Build axiom-init
+        working-directory: ./axiom-init
+        run: npm run build
+
+      - name: Initialize app
+        working-directory: ./axiom-init
+        run: node dist/index.js init -p app-forge -s forge -m npm -c 1
+
+      - name: Compile circuit
+        working-directory: ./axiom-init/app-forge
+        run: npx axiom circuit compile app/axiom/average.circuit.ts -p ${{ env.RPC_URL_1 }} --force
+
+      - name: Forge test
+        working-directory: ./axiom-init/app-forge
+        run: forge test -vvv
+
+
+  test-forge-yarn:
+    name: "axiom-init: Forge (yarn)"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Enable Corepack
+        run: corepack enable
+      
+      - name: Use Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'yarn'
+          registry-url: "https://registry.npmjs.org"
+          cache-dependency-path: axiom-init/yarn.lock
+      
+      - name: Install yarn packages
+        working-directory: ./axiom-init
+        run: yarn --no-lockfile
+
+      - name: Set Git user
+        run: |
+          git config --global user.name "Axiom CI"
+          git config --global user.email "ci@axiom.xyz"
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly
+
+      - name: Check forge version
+        run: forge --version
+
+      - name: Install yarn packages
+        working-directory: ./axiom-init
+        run: yarn
+
+      - name: Build axiom-init
+        working-directory: ./axiom-init
+        run: yarn build
+
+      - name: Initialize app
+        working-directory: ./axiom-init
+        run: node dist/index.js init -p app-forge -s forge -m yarn -c 84532
+
+      - name: Compile circuit
+        working-directory: ./axiom-init/app-forge
+        run: yarn axiom circuit compile app/axiom/average.circuit.ts -p ${{ env.RPC_URL_84532 }} --force
+
+      - name: Forge test
+        working-directory: ./axiom-init/app-forge
+        run: forge test -vvv
+
+
+  test-forge-pnpm:
+    name: "axiom-init: Forge (pnpm)"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8
+
+      - name: "Install Node.js"
+        uses: "actions/setup-node@v4"
+        with:
+          node-version: "20.x"
+          cache: "pnpm"
+          registry-url: "https://registry.npmjs.org"
+          cache-dependency-path: axiom-init/pnpm-lock.yaml
+
+      - name: Set Git user
+        run: |
+          git config --global user.name "Axiom CI"
+          git config --global user.email "ci@axiom.xyz"
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly
+
+      - name: Check forge version
+        run: forge --version
+
+      - name: Install pnpm packages
+        working-directory: ./axiom-init
+        run: pnpm install
+
+      - name: Build axiom-init
+        working-directory: ./axiom-init
+        run: pnpm run build
+
+      - name: Initialize app
+        working-directory: ./axiom-init
+        run: node dist/index.js init -p app-forge -s forge -m pnpm -c 11155111
+
+      - name: Compile circuit
+        working-directory: ./axiom-init/app-forge
+        run: pnpm axiom circuit compile app/axiom/average.circuit.ts -p ${{ env.RPC_URL_11155111 }} --force
+
+      - name: Forge test
+        working-directory: ./axiom-init/app-forge
+        run: forge test -vvv
