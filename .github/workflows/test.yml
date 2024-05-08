@@ -135,11 +135,11 @@ jobs:
 
       - name: Initialize app
         working-directory: ./axiom-init
-        run: node dist/index.js init -p app-nextjs -s nextjs -m yarn -c 1
+        run: node dist/index.js init -p app-nextjs -s nextjs -m yarn -c 11155111
 
       - name: Compile circuit
         working-directory: ./axiom-init/app-nextjs
-        run: yarn axiom circuit compile app/axiom/average.circuit.ts -p ${{ env.RPC_URL_1 }} --force
+        run: yarn axiom circuit compile app/axiom/average.circuit.ts -p ${{ env.RPC_URL_11155111 }} --force
 
       - name: Forge test
         working-directory: ./axiom-init/app-nextjs
@@ -148,8 +148,8 @@ jobs:
       - name: Write .env.local file
         working-directory: ./axiom-init/app-nextjs/app
         run: |
-          echo "NEXT_PUBLIC_RPC_URL_1=${{ env.RPC_URL_1 }}" > .env.local
-          echo "NEXT_PUBLIC_PROVIDER_URI_1=${{ env.RPC_URL_1 }}" >> .env.local
+          echo "NEXT_PUBLIC_RPC_URL_11155111=${{ env.RPC_URL_11155111 }}" > .env.local
+          echo "NEXT_PUBLIC_PROVIDER_URI_11155111=${{ env.RPC_URL_11155111 }}" >> .env.local
           echo "NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=${{ env.WALLETCONNECT_PROJECT_ID }}" >> .env.local
 
       - name: Build Next.js app
@@ -252,6 +252,10 @@ jobs:
 
       - name: Check forge version
         run: forge --version
+
+      - name: Install npm packages
+        working-directory: ./axiom-init
+        run: npm install
 
       - name: Build axiom-init
         working-directory: ./axiom-init
