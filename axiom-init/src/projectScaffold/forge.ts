@@ -72,7 +72,7 @@ export const scaffoldForge = async (
   // Clone the axiom-quickstart template
   console.log("Fetching Axiom quickstart template...");
   const tempDir = `.axiom-temp-${Date.now()}`;
-  await sm.exec(`git clone --depth 1 https://github.com/axiom-crypto/axiom-quickstart.git ${tempDir}`, "Clone Axiom quickstart template");
+  await sm.execWithStream(`git clone --depth 1 https://github.com/axiom-crypto/axiom-quickstart.git ${tempDir}`, [], "Clone Axiom quickstart template");
   sm.cp(`${tempDir}/.`, ".", `  - Copy files to ${chalk.bold(sm.basePath)}`);
 
   // Delete .ts files in app folder (not recursive)
