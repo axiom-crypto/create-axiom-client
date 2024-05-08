@@ -88,11 +88,11 @@ export const scaffoldForge = async (
   await sm.exec("git init", "Initialize git repository");
 
   // Create an inital commit
-  await sm.exec("git add .", "  - Add all files to git");
-  await sm.exec("git commit -m 'Initial commit'", "  - Create initial commit");
+  await sm.execWithStream("git add .", [], "  - Add all files to git");
+  await sm.execWithStream("git commit -m 'Initial commit'", [], "  - Create initial commit");
 
   // Install axiom-std
-  await sm.exec("forge install axiom-crypto/axiom-std", "Install axiom-std");
+  await sm.execWithStream("forge install axiom-crypto/axiom-std", [], "Install axiom-std");
 
   // Find and replace all
   sm.findAndReplaceAll("Update chain data");
@@ -105,8 +105,8 @@ export const scaffoldForge = async (
   await sm.exec(`rm -rf ${tempDir}`, "Clean up build files");
 
   // Create an update commit
-  await sm.exec("git add .", "  - Add updated chain data files to git");
-  await sm.exec("git commit -m 'Update chain data'", "  - Update chain data commit");
+  await sm.execWithStream("git add .", [], "  - Add updated chain data files to git");
+  await sm.execWithStream("git commit -m 'Update chain data'", [], "  - Update chain data commit");
 
   // Move back to starting path
   process.chdir(startingPath);

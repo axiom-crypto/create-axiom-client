@@ -386,18 +386,9 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Setup npm
-        uses: npm/action-setup@v3
+      - uses: actions/setup-node@v4
         with:
-          version: 8
-
-      - name: "Install Node.js"
-        uses: "actions/setup-node@v4"
-        with:
-          node-version: "20.x"
-          cache: "npm"
-          registry-url: "https://registry.npmjs.org"
-          cache-dependency-path: axiom-init/npm-lock.yaml
+          node-version: 18
 
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
