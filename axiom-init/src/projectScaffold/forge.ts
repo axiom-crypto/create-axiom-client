@@ -67,18 +67,16 @@ export const scaffoldForge = async (
   sm.mkdir(".", `  - Create directory ${chalk.bold(sm.basePath)}`);
 
   // Move to base path
-  process.chdir(sm.basePath);
+  sm.setPath(sm.basePath);
 
   // Clone the axiom-quickstart template
   console.log("Fetching Axiom quickstart template...");
   const tempDir = `.axiom-temp-${Date.now()}`;
   await sm.exec(`git clone --depth 1 https://github.com/axiom-crypto/axiom-quickstart.git ${tempDir}`, "Clone Axiom quickstart template");
+  sm.cp(`${tempDir}/.`, ".", `  - Copy files to ${chalk.bold(sm.basePath)}`);
 
   // Delete .ts files in app folder (not recursive)
-  await sm.exec(`find ${path.join(tempDir, "app")} -maxdepth 1 -type f -name "*.ts" -delete`, "  - Process template");
-
-  // Copy files to target path
-  sm.cp(`${tempDir}/.`, ".", `  - Copy files to ${chalk.bold(sm.basePath)}`);
+  await sm.exec(`find app -maxdepth 1 -type f -name "*.ts" -delete`, "  - Update app folder");
 
   // Remove .git folder from cloned quickstart scaffold
   await sm.rm(".git", `  - Remove .git folder from cloned quickstart scaffold`);
@@ -89,8 +87,12 @@ export const scaffoldForge = async (
   // Initialize git repo
   await sm.exec("git init", "Initialize git repository");
 
+  // Create an inital commit
+  await sm.exec("git add .", "  - Add all files to git");
+  await sm.exec("git commit -m 'Initial commit'", "  - Create initial commit");
+
   // Install axiom-std
-  await sm.exec("forge install axiom-crypto/axiom-std --no-commit", "Install axiom-std");
+  await sm.exec("forge install axiom-crypto/axiom-std", "Install axiom-std");
 
   // Find and replace all
   sm.findAndReplaceAll("Update chain data");
@@ -101,6 +103,10 @@ export const scaffoldForge = async (
 
   // Clean up cloned repo
   await sm.exec(`rm -rf ${tempDir}`, "Clean up build files");
+
+  // Create an update commit
+  await sm.exec("git add .", "  - Add updated chain data files to git");
+  await sm.exec("git commit -m 'Update chain data'", "  - Update chain data commit");
 
   // Move back to starting path
   process.chdir(startingPath);

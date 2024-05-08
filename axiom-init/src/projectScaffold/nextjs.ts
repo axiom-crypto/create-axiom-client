@@ -100,6 +100,11 @@ export const scaffoldNext = async (
   console.log("Installing Next.js scaffold dependencies...");
   await sm.execWithStream(sm.manager, [sm.installCmd], `Install Next.js scaffold dependencies`);
 
+  // Add Next.js files to git
+  sm.setPath("..");
+  await sm.exec("git add .", "  - Add Next.js files to git");
+  await sm.exec("git commit -m 'Add Next.js files'", "  - Add Next.js files commit");
+
   // cd back to starting path
   process.chdir(startingPath);
 
