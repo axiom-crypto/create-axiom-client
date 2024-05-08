@@ -173,7 +173,7 @@ jobs:
 
       - name: Initialize app
         working-directory: ./axiom-init
-        run: node dist/index.js init -p app-forge -s forge -m pnpm -c 8453
+        run: node dist/index.js init -p app-forge -s forge -m pnpm -c 11155111
 
       - name: Forge test
         working-directory: ./axiom-init/app-forge
@@ -181,13 +181,13 @@ jobs:
 
       - name: Compile circuit
         working-directory: ./axiom-init/app-forge
-        run: npx axiom circuit compile app/axiom/average.circuit.ts -p ${{ env.RPC_URL_8453 }} --force
+        run: npx axiom circuit compile app/axiom/average.circuit.ts -p ${{ env.RPC_URL_11155111 }} --force
 
       - name: Write .env file
         working-directory: ./axiom-init/app-forge
         run: |
-          echo "RPC_URL_8453=${{ env.RPC_URL_8453 }}" > .env
-          echo "PROVIDER_URI_8453=${{ env.PROVIDER_URI_8453 }}" >> .env
+          echo "RPC_URL_11155111=${{ env.RPC_URL_11155111 }}" > .env
+          echo "PROVIDER_URI_11155111=${{ env.PROVIDER_URI_11155111 }}" >> .env
 
       - name: Send query
         working-directory: ./axiom-init/app-forge/app
