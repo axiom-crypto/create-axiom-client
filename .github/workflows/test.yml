@@ -8,9 +8,11 @@ on:
         - staging
 
 env:
+    RPC_URL_1: ${{ secrets.RPC_URL_1 }}
     RPC_URL_11155111: ${{ secrets.RPC_URL_11155111 }}
     RPC_URL_8453: ${{ secrets.RPC_URL_8453 }}
     RPC_URL_84532: ${{ secrets.RPC_URL_84532 }}
+    PROVIDER_URI_1: ${{ secrets.RPC_URL_1 }}
     PROVIDER_URI_11155111: ${{ secrets.RPC_URL_11155111 }}
     PROVIDER_URI_8453: ${{ secrets.RPC_URL_8453 }}
     PROVIDER_URI_84532: ${{ secrets.RPC_URL_84532 }}
@@ -58,13 +60,14 @@ jobs:
         working-directory: ./axiom-init
         run: node dist/index.js init -p app-nextjs -s nextjs -m npm -c 11155111
 
-      - name: Forge test
-        working-directory: ./axiom-init/app-nextjs
-        run: forge test -vvv
-
       - name: Compile circuit
         working-directory: ./axiom-init/app-nextjs
         run: npx axiom circuit compile app/axiom/average.circuit.ts -p ${{ env.RPC_URL_11155111 }} --force
+
+
+      - name: Forge test
+        working-directory: ./axiom-init/app-nextjs
+        run: forge test -vvv
 
       - name: Write .env.local file
         working-directory: ./axiom-init/app-nextjs/app
@@ -116,13 +119,13 @@ jobs:
         working-directory: ./axiom-init
         run: node dist/index.js init -p app-script -s script -m yarn -c 84532
 
-      - name: Forge test
-        working-directory: ./axiom-init/app-script
-        run: forge test -vvv
-
       - name: Compile circuit
         working-directory: ./axiom-init/app-script
         run: npx axiom circuit compile app/axiom/average.circuit.ts -p ${{ env.RPC_URL_84532 }} --force
+
+      - name: Forge test
+        working-directory: ./axiom-init/app-script
+        run: forge test -vvv
 
       - name: Write .env file
         working-directory: ./axiom-init/app-script
@@ -173,23 +176,12 @@ jobs:
 
       - name: Initialize app
         working-directory: ./axiom-init
-        run: node dist/index.js init -p app-forge -s forge -m pnpm -c 11155111
+        run: node dist/index.js init -p app-forge -s forge -m pnpm -c 1
+
+      - name: Compile circuit
+        working-directory: ./axiom-init/app-forge
+        run: npx axiom circuit compile app/axiom/average.circuit.ts -p ${{ env.RPC_URL_1 }} --force
 
       - name: Forge test
         working-directory: ./axiom-init/app-forge
         run: forge test -vvv
-
-      - name: Compile circuit
-        working-directory: ./axiom-init/app-forge
-        run: npx axiom circuit compile app/axiom/average.circuit.ts -p ${{ env.RPC_URL_11155111 }} --force
-
-      - name: Write .env file
-        working-directory: ./axiom-init/app-forge
-        run: |
-          echo "RPC_URL_11155111=${{ env.RPC_URL_11155111 }}" > .env
-          echo "PROVIDER_URI_11155111=${{ env.PROVIDER_URI_11155111 }}" >> .env
-
-      - name: Send query
-        working-directory: ./axiom-init/app-forge/app
-        run: yarn start
-      
