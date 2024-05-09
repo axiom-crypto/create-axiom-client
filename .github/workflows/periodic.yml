@@ -30,25 +30,11 @@ jobs:
       - name: Install Yarn
         run: npm install -g yarn
 
-      # - name: Set up pnpm
-      #   uses: pnpm/action-setup@v2.0.1
-      #   with:
-      #     version: 7.x
-
-      # - name: Install pnpm globally
-      #   run: pnpm install -g pnpm
-
       - name: pnpm setup
         run: SHELL=bash pnpm setup
 
       - name: Source bashrc
         run: source /home/runner/.bashrc
-
-      # - name: Install axiom-init
-      #   run: |
-      #     export PNPM_HOME="/home/runner/.local/share/pnpm"
-      #     export PATH="$PNPM_HOME:$PATH"
-      #     pnpm install -g axiom-init
 
       - name: Set Git user
         run: |
@@ -91,7 +77,7 @@ jobs:
         run: |
           export PNPM_HOME="/home/runner/.local/share/pnpm"
           export PATH="$PNPM_HOME:$PATH"
-          npm_config_yes=true npx create-axiom-client init -p axiom-app -s ${{ env.SCAFFOLD }} -m pnpm -c 11155111
+          npm_config_yes=true npx create-axiom-client init -p axiom-app -s ${{ env.SCAFFOLD }} -m yarn -c 11155111
         
       - name: Write local .env file
         working-directory: ./axiom-app
