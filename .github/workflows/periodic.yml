@@ -2,8 +2,8 @@ name: "create-axiom-client periodic test"
 
 on:
   schedule:
-    # Runs at the start of every hour
-    # - cron: '0 * * * *'
+    # Runs on the 18th minute of every hour
+    # - cron: '18 * * * *'
     - cron: '*/5 * * * *'
   push:
 
@@ -23,6 +23,12 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+
+      - name: Install Yarn
+        run: npm install -g yarn
+
+      - name: Install pnpm
+        run: npm install -g pnpm
 
       - name: Set Git user
         run: |
@@ -51,8 +57,16 @@ jobs:
           fi
           echo "OPTION=$OPTION" >> $GITHUB_ENV
 
+      - name: Determine package manager randomly
+        id: package_manager
+        run: |
+          PACKAGE_MANAGERS=("npm" "yarn" "pnpm")
+          RANDOM_INDEX=$(($RANDOM % 3))
+          PACKAGE_MANAGER=${PACKAGE_MANAGERS[$RANDOM_INDEX]}
+          echo "PACKAGE_MANAGER=$PACKAGE_MANAGER" >> $GITHUB_ENV
+
       - name: Create Axiom Client
-        run: npm_config_yes=true npx create-axiom-client init -p axiom-app -s ${{ env.OPTION }} -m npm -c 11155111
+        run: npm_config_yes=true npx create-axiom-client init -p axiom-app -s ${{ env.OPTION }} -m ${{ env.PACKAGE_MANAGER }} -c 11155111
 
       - name: Write local .env file
         working-directory: ./axiom-app
