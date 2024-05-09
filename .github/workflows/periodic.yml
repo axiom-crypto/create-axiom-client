@@ -45,7 +45,10 @@ jobs:
         run: source /home/runner/.bashrc
 
       - name: Install axiom-init
-        run: PNPM_HOME="/home/runner/.local/share/pnpm" pnpm install -g axiom-init
+        run: |
+          export PNPM_HOME="/home/runner/.local/share/pnpm"
+          export PATH="$PNPM_HOME:$PATH"
+          pnpm install -g axiom-init
 
       - name: Set Git user
         run: |
