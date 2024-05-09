@@ -28,7 +28,7 @@ jobs:
       #   run: npm install -g yarn
 
       - name: Install pnpm
-        run: npm install -g pnpm
+        run: curl -fsSL https://get.pnpm.io/install.sh | sh -
 
       - name: Set Git user
         run: |
