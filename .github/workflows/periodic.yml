@@ -39,7 +39,7 @@ jobs:
           echo "OPTION=$OPTION" >> $GITHUB_ENV
 
       - name: Create Axiom Client
-        run:npm_config_yes=true npx create-axiom-client init -p axiom-app -s ${{ env.OPTION }} -m npm -c 11155111
+        run: npm_config_yes=true npx create-axiom-client init -p axiom-app -s ${{ env.OPTION }} -m npm -c 11155111
 
       - name: Write local .env file
         working-directory: ./axiom-app
