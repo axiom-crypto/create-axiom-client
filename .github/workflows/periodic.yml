@@ -4,7 +4,7 @@ on:
   schedule:
     # Runs at the start of every hour
     # - cron: '0 * * * *'
-    - cron: '*/3 * * * *'
+    - cron: '*/5 * * * *'
   push:
 
 env:
@@ -44,8 +44,8 @@ jobs:
       - name: Write local .env file
         working-directory: ./axiom-app
         run: |
-          echo "RPC_URL_11155111=${{ env.RPC_URL_11155111 }}" > .env.local
-          echo "PROVIDER_URI_11155111=${{ env.RPC_URL_11155111 }}" >> .env.local
+          echo "RPC_URL_11155111=${{ env.RPC_URL_11155111 }}" > .env
+          echo "PROVIDER_URI_11155111=${{ env.RPC_URL_11155111 }}" >> .env
 
       - name: Run Forge Test
         working-directory: ./axiom-app
