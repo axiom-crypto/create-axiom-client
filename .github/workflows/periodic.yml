@@ -35,6 +35,12 @@ jobs:
       - name: Install pnpm globally
         run: npm install -g pnpm
 
+      - name: Check pnm version
+        run: pnpm --version
+
+      - name: Install axiom-init
+        run: pnpm install -g axiom-init
+
       - name: Set Git user
         run: |
           git config --global user.name "Axiom CI"
