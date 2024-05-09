@@ -88,7 +88,10 @@ jobs:
           echo "PKG=$PKG" >> $GITHUB_ENV
 
       - name: create-axiom-client
-        run: npm_config_yes=true npx create-axiom-client init -p axiom-app -s ${{ env.SCAFFOLD }} -m pnpm -c 11155111
+        run: |
+          export PNPM_HOME="/home/runner/.local/share/pnpm"
+          export PATH="$PNPM_HOME:$PATH"
+          npm_config_yes=true npx create-axiom-client init -p axiom-app -s ${{ env.SCAFFOLD }} -m pnpm -c 11155111
         
       - name: Write local .env file
         working-directory: ./axiom-app
