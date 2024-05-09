@@ -2,8 +2,8 @@ name: "create-axiom-client periodic test"
 
 on:
   schedule:
-    # Runs on the 18th minute of every hour
-    - cron: '6 * * * *'
+    # Runs on the 18th minute of every hour (reduce scheduling conflicts)
+    - cron: '18 * * * *'
 
 env:
   RPC_URL_11155111: ${{ secrets.RPC_URL_11155111 }}
