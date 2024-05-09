@@ -39,7 +39,7 @@ jobs:
         run: SHELL=bash pnpm setup
 
       - name: Source bashrc
-        source /home/runner/.bashrc
+        run: source /home/runner/.bashrc
 
       - name: Install axiom-init
         run: pnpm install -g axiom-init
