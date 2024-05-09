@@ -27,8 +27,10 @@ jobs:
       # - name: Install Yarn
       #   run: npm install -g yarn
 
-      - name: Install pnpm
-        run: curl -fsSL https://get.pnpm.io/install.sh | sh -
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 7.x
 
       - name: Set Git user
         run: |
