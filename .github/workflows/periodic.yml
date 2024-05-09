@@ -57,17 +57,17 @@ jobs:
           fi
           echo "OPTION=$OPTION" >> $GITHUB_ENV
 
-      - name: Determine package manager randomly
-        id: package_manager
-        run: |
-          PACKAGE_MANAGERS=("npm" "yarn" "pnpm")
-          RANDOM_INDEX=$(($RANDOM % 3))
-          PACKAGE_MANAGER=${PACKAGE_MANAGERS[$RANDOM_INDEX]}
-          echo "PACKAGE_MANAGER=$PACKAGE_MANAGER" >> $GITHUB_ENV
+      # - name: Determine package manager randomly
+      #   id: package_manager
+      #   run: |
+      #     PACKAGE_MANAGERS=("npm" "yarn" "pnpm")
+      #     RANDOM_INDEX=$(($RANDOM % 3))
+      #     PACKAGE_MANAGER=${PACKAGE_MANAGERS[$RANDOM_INDEX]}
+      #     echo "PACKAGE_MANAGER=$PACKAGE_MANAGER" >> $GITHUB_ENV
+      #     ${{ env.PACKAGE_MANAGER }}
 
       - name: Create Axiom Client
         run: npm_config_yes=true npx create-axiom-client init -p axiom-app -s ${{ env.OPTION }} -m yarn -c 11155111
-        # ${{ env.PACKAGE_MANAGER }}
         
       - name: Write local .env file
         working-directory: ./axiom-app
