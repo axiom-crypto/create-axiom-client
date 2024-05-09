@@ -40,7 +40,7 @@ jobs:
       - name: Create Axiom Client
         run: npx create-axiom-client -p axiom-app -s ${{ env.OPTION }} -m npm -c 11155111
 
-      - Write local .env file
+      - name: Write local .env file
         working-directory: ./axiom-app
         run: |
           echo "RPC_URL_11155111=${{ env.RPC_URL_11155111 }}" > .env.local
