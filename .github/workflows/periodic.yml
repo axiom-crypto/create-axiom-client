@@ -3,9 +3,7 @@ name: "create-axiom-client periodic test"
 on:
   schedule:
     # Runs on the 18th minute of every hour
-    # - cron: '18 * * * *'
-    - cron: '*/5 * * * *'
-  push:
+    - cron: '6 * * * *'
 
 env:
   RPC_URL_11155111: ${{ secrets.RPC_URL_11155111 }}
@@ -77,7 +75,7 @@ jobs:
         run: |
           export PNPM_HOME="/home/runner/.local/share/pnpm"
           export PATH="$PNPM_HOME:$PATH"
-          npm_config_yes=true npx create-axiom-client init -p axiom-app -s ${{ env.SCAFFOLD }} -m npm -c 11155111
+          npm_config_yes=true npx create-axiom-client init -p axiom-app -s ${{ env.SCAFFOLD }} -m ${{ env.PKG }} -c 111555111
         
       - name: Write local .env file
         working-directory: ./axiom-app
