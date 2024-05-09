@@ -36,7 +36,7 @@ jobs:
         run: npm install -g pnpm
 
       - name: Check pnm version
-        run: pnpm setup
+        run: SHELL=bash pnpm setup
 
       - name: Install axiom-init
         run: pnpm install -g axiom-init
