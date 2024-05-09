@@ -1,0 +1,50 @@
+name: "create-axiom-client periodic test"
+
+on:
+  schedule:
+    # Runs at the start of every hour
+    - cron: '0 * * * *'
+
+env:
+  RPC_URL_11155111: ${{ secrets.RPC_URL_11155111 }}
+  RPC_URL_8453: ${{ secrets.RPC_URL_8453 }}
+  RPC_URL_84532: ${{ secrets.RPC_URL_84532 }}
+
+jobs:
+  create-axiom-client-periodic-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Determine option based on hour
+        id: option
+        run: |
+          HOUR=$(date +'%-H')
+          OPTION=$((HOUR % 3))
+          if [ "$OPTION" -eq 0 ]; then
+            OPTION="nextjs"
+          elif [ "$OPTION" -eq 1 ]; then
+            OPTION="script"
+          else
+            OPTION="forge"
+          fi
+          echo "OPTION=$OPTION" >> $GITHUB_ENV
+
+      - name: Create Axiom Client
+        run: npx create-axiom-client -p axiom-app -s ${{ env.OPTION }} -m npm -c 11155111
+
+      - Write local .env file
+        working-directory: ./axiom-app
+        run: |
+          echo "RPC_URL_11155111=${{ env.RPC_URL_11155111 }}" > .env.local
+          echo "PROVIDER_URI_11155111=${{ env.RPC_URL_11155111 }}" >> .env.local
+
+      - name: Run Forge Test
+        working-directory: ./axiom-app
+        run: forge test
