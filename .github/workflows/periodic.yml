@@ -24,6 +24,19 @@ jobs:
         with:
           node-version: 20
 
+      - name: Set Git user
+        run: |
+          git config --global user.name "Axiom CI"
+          git config --global user.email "ci@axiom.xyz"
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly
+
+      - name: Check forge version
+        run: forge --version
+
       - name: Determine option based on hour
         id: option
         run: |
