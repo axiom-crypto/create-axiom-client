@@ -5,6 +5,7 @@ on:
     # Runs at the start of every hour
     # - cron: '0 * * * *'
     - cron: '*/3 * * * *'
+  push:
 
 env:
   RPC_URL_11155111: ${{ secrets.RPC_URL_11155111 }}
