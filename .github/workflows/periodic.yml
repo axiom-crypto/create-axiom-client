@@ -32,6 +32,9 @@ jobs:
         with:
           version: 7.x
 
+      - name: Install pnpm globally
+        run: npm install -g pnpm
+
       - name: Set Git user
         run: |
           git config --global user.name "Axiom CI"
@@ -45,31 +48,32 @@ jobs:
       - name: Check forge version
         run: forge --version
 
-      - name: Determine option based on hour
-        id: option
+      - name: Determine scaffold based on hour
+        id: scaffold
         run: |
           HOUR=$(date +'%-H')
-          OPTION=$((HOUR % 3))
-          if [ "$OPTION" -eq 0 ]; then
-            OPTION="nextjs"
-          elif [ "$OPTION" -eq 1 ]; then
-            OPTION="script"
+          SCAFFOLD=$((HOUR % 3))
+          if [ "$SCAFFOLD" -eq 0 ]; then
+            SCAFFOLD="nextjs"
+          elif [ "$SCAFFOLD" -eq 1 ]; then
+            SCAFFOLD="script"
           else
-            OPTION="forge"
+            SCAFFOLD="forge"
           fi
-          echo "OPTION=$OPTION" >> $GITHUB_ENV
+          echo "SCAFFOLD=$SCAFFOLD" >> $GITHUB_ENV
 
-      # - name: Determine package manager randomly
-      #   id: package_manager
-      #   run: |
-      #     PACKAGE_MANAGERS=("npm" "yarn" "pnpm")
-      #     RANDOM_INDEX=$(($RANDOM % 3))
-      #     PACKAGE_MANAGER=${PACKAGE_MANAGERS[$RANDOM_INDEX]}
-      #     echo "PACKAGE_MANAGER=$PACKAGE_MANAGER" >> $GITHUB_ENV
-      #     ${{ env.PACKAGE_MANAGER }}
+      - name: Determine package manager in 45 mins intervals
+        id: package_manager
+        run: |
+          EPOCH_TIME=$(date +%s)
+          INTERVALS=$((EPOCH_TIME / 2700)) # 2700 seconds = 45 minutes
+          INDEX=$((INTERVALS % 3))
+          PACKAGE_MANAGERS=("npm" "yarn" "pnpm")
+          PKG=${PACKAGE_MANAGERS[$INDEX]}
+          echo "PKG=$PKG" >> $GITHUB_ENV
 
       - name: Create Axiom Client
-        run: npm_config_yes=true npx create-axiom-client init -p axiom-app -s ${{ env.OPTION }} -m pnpm -c 11155111
+        run: npm_config_yes=true npx create-axiom-client init -p axiom-app -s ${{ env.SCAFFOLD }} -m pnpm -c 11155111
         
       - name: Write local .env file
         working-directory: ./axiom-app
