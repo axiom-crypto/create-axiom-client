@@ -3,7 +3,8 @@ name: "create-axiom-client periodic test"
 on:
   schedule:
     # Runs at the start of every hour
-    - cron: '0 * * * *'
+    # - cron: '0 * * * *'
+    - cron: '*/3 * * * *'
 
 env:
   RPC_URL_11155111: ${{ secrets.RPC_URL_11155111 }}
