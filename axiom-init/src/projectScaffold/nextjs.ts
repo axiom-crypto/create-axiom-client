@@ -79,7 +79,7 @@ export const scaffoldNext = async (
   }
 
   // Clone the Next.js scaffold
-  console.log("Fetching Axiom Next.js scaffold...");
+  console.log("\nFetching Axiom Next.js scaffold...");
   const tempDir = `.axiom-temp-nextjs-${Date.now()}`; 
   await sm.execWithStream(`git clone --depth 1 https://github.com/axiom-crypto/axiom-scaffold-nextjs.git ${tempDir}`, [], "Clone Axiom Next.js scaffold");
   sm.cp(`${tempDir}/.`, appPath, `  - Copy Next.js scaffold files to ${chalk.bold(appPath)}`);
@@ -97,7 +97,7 @@ export const scaffoldNext = async (
   sm.findAndReplaceAll("Update chain data");
 
   // Install package dependencies
-  console.log("Installing Next.js scaffold dependencies...");
+  console.log("\nInstalling Next.js scaffold dependencies...");
   await sm.execWithStream(sm.manager, [sm.installCmd], `Install Next.js scaffold dependencies`);
 
   // Add Next.js files to git

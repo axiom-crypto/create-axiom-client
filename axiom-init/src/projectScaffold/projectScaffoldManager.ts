@@ -151,6 +151,7 @@ export class ProjectScaffoldManager {
   findAndReplaceAll(description: string) {
       // Update chain ID
     findAndReplaceRecursive(this.fullPath, 'CHAIN_ID = "11155111"', `CHAIN_ID = "${this.chainId}"`);
+    findAndReplaceRecursive(this.fullPath, '--sourceChainId 11155111', `--sourceChainId ${this.chainId}`);
 
     // Update provider URI for Foundry
     findAndReplaceRecursive(this.fullPath, 'PROVIDER_URI_11155111', `PROVIDER_URI_${this.chainId}`);

@@ -70,7 +70,7 @@ export const scaffoldForge = async (
   sm.setPath(sm.basePath);
 
   // Clone the axiom-quickstart template
-  console.log("Fetching Axiom quickstart template...");
+  console.log("\nFetching Axiom quickstart template...");
   const tempDir = `.axiom-temp-${Date.now()}`;
   await sm.execWithStream(`git clone --depth 1 https://github.com/axiom-crypto/axiom-quickstart.git ${tempDir}`, [], "Clone Axiom quickstart template");
   sm.cp(`${tempDir}/.`, ".", `  - Copy files to ${chalk.bold(sm.basePath)}`);
@@ -98,7 +98,7 @@ export const scaffoldForge = async (
   sm.findAndReplaceAll("Update chain data");
 
   // Install package dependencies
-  console.log("Installing package dependencies...");
+  console.log("\nInstalling package dependencies...");
   await sm.execWithStream(sm.manager, [sm.installCmd], `Install package dependencies`);
 
   // Clean up cloned repo

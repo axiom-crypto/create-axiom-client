@@ -50,19 +50,19 @@ export const findAndReplaceRecursive = (folder: string, find: string, replace: s
     return;
   }
 
-  const files = fs.readdirSync(folder);
-  files.forEach((file) => {
-    const filePath = path.join(folder, file);
-    const stat = fs.statSync(filePath);
+  const items = fs.readdirSync(folder);
+  items.forEach((item) => {
+    const itemPath = path.join(folder, item);
+    const stat = fs.statSync(itemPath);
     if (stat.isDirectory()) {
-      // Skip directories that start with a dot
-      if (!file.startsWith('.')) {
-        findAndReplaceRecursive(filePath, find, replace);
+      // Skip directories that start with a dot except `.github`
+      if (item === ".github" || !item.startsWith('.')) {
+        findAndReplaceRecursive(itemPath, find, replace);
       }
     } else {
-      let content = fs.readFileSync(filePath, "utf8");
+      let content = fs.readFileSync(itemPath, "utf8");
       content = content.replace(new RegExp(find, "g"), replace);
-      fs.writeFileSync(filePath, content, "utf8");
+      fs.writeFileSync(itemPath, content, "utf8");
     }
   });
 }
