@@ -4,7 +4,10 @@ import { PromptObject } from "prompts";
 export const Options: Record<string, string[]> = {
   scaffold: ["nextjs", "script", "forge"],
   manager: ["npm", "yarn", "pnpm"],
+  queryType: ["samechain", "crosschain"],
   chainId: ["11155111", "84532", "1" /*, "8453" */],
+  targetChainId: ["84532"],
+  sourceChainId: ["11155111"],
 };
 
 // deployed ExampleV2Client contract address
@@ -24,7 +27,7 @@ export const AverageBalance: Record<string, string> = {
 };
 
 
-export const Prompts: Record<string, PromptObject> = {
+export const Prompts: Record<string, any> = {
   "path": {
     name: "path",
     type: "text",
@@ -50,15 +53,44 @@ export const Prompts: Record<string, PromptObject> = {
     ],
     message: "Which package manager do you want to use for the project?"
   },
-  "chainId": {
-    name: "chainId",
+  "queryType": {
+    name: "queryType",
     type: "select",
     choices: [
-      { title: "11155111", value: "11155111", description: "Ethereum Sepolia (default)" }, 
-      { title: "84532", value: "84532", description: "Base Sepolia" },
-      { title: "1", value: "1", description: "Ethereum Mainnet" },
-      // { title: "8453", value: "8453", description: "Base Mainnet" },
+      { title: "Same-chain", value: "samechain", description: "Query and use data from the same chain (default)" },
+      { title: "Cross-chain", value: "crosschain", description: "Query data from one chain (source) and use it on another chain (target)" },
     ],
-    message: "Which chain ID would you like your project to use?"
+    message: "What type of Axiom query would you like to use?"
+  },
+  "samechain": {
+    "chainId": {
+      name: "chainId",
+      type: "select",
+      choices: [
+        { title: "11155111", value: "11155111", description: "Ethereum Sepolia (default)" }, 
+        { title: "84532", value: "84532", description: "Base Sepolia" },
+        { title: "1", value: "1", description: "Ethereum Mainnet" },
+        // { title: "8453", value: "8453", description: "Base Mainnet" },
+      ],
+      message: "Which chain ID would you like your project to use?"
+    },
+  },
+  "crosschain": {
+    "targetChainId": {
+      name: "targetChainId",
+      type: "select",
+      choices: [
+        { title: "84532", value: "84532", description: "Base Sepolia (default)" }, 
+      ],
+      message: "Which chain ID would you like your project to use for the target chain (where you send the Axiom query transaction)?"
+    },
+    "sourceChainId": {
+      name: "sourceChainId",
+      type: "select",
+      choices: [
+        { title: "11155111", value: "11155111", description: "Ethereum Sepolia (default)" }, 
+      ],
+      message: "Which chain ID would you like your project to use for the source chain (where the data is queried from)?"
+    },
   }
 }

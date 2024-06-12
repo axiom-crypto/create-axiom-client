@@ -1,6 +1,8 @@
 import fs from "fs";
 import path from "path";
 import { PromptObject } from "prompts";
+import { ProjectScaffoldOptions } from "../types";
+import { ProjectScaffoldManager } from "./projectScaffoldManager";
 
 export const getInstallCmd = (manager: string): string => {
   switch (manager) {
@@ -26,12 +28,13 @@ export const getDevFlag = (manager: string): string => {
   }
 }
 
-export const parseAnswer = (name: string, options: Record<string, string>, validOptions: string[]): boolean => {
-  if (options[name] === undefined) {
+export const parseAnswer = (name: string, options: ProjectScaffoldOptions, validOptions: string[]): boolean => {
+  const option = options[name as keyof ProjectScaffoldOptions];
+  if (option === undefined) {
     return false;
   }
 
-  const parsedOption = options[name].trim().toLowerCase();
+  const parsedOption = option.trim().toLowerCase();
   if (!validOptions.includes(parsedOption)) {
     throw new Error(`Invalid option for ${name}. Valid options: [${validOptions.join(", ")}]`);
   }

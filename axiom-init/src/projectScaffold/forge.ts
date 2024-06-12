@@ -5,6 +5,7 @@ import { ProjectScaffoldManager } from "./projectScaffoldManager"
 import { validatePackageManager } from "./dependency";
 import { filterQuestions, parseAnswer } from './utils';
 import { Options, Prompts } from '../constants';
+import { setup } from '../setup';
 
 export const scaffoldForge = async (
   options: {
@@ -18,44 +19,8 @@ export const scaffoldForge = async (
   let shouldPrint = false;
   if (sm === undefined) {
     shouldPrint = true;
-
-    // List of questions
-    let setupQuestions: PromptObject[] = [
-      Prompts.path,
-      Prompts.manager,
-      Prompts.chainId,
-    ];
-
-    // Remove prompt for path if it's already passed in
-    if (options.path !== undefined) {
-      setupQuestions = filterQuestions("path", setupQuestions);
-    }
-  
-    // Validate package manager answers in options
-    if (parseAnswer("manager", options, Options.manager)) {
-      setupQuestions = filterQuestions("manager", setupQuestions);
-    }
-  
-    // Validate chainId answers in options
-    if (parseAnswer("chainId", options, Options.chainId)) {
-      setupQuestions = filterQuestions("chainId", setupQuestions);
-    }
-
-    let answers = await prompt(setupQuestions)
-    
-    if (answers.path === "") {
-      answers.path = "axiom-quickstart";
-    }
-
-    options = {
-      ...answers,
-      ...options,
-    }
-
-    // Validate that the package manager the user has selected is installed
-    validatePackageManager(options.manager);
-
-    sm = new ProjectScaffoldManager(options.path, options.manager, options.chainId);
+    const { scaffoldManager } = await setup(options, {scaffold: "forge"});
+    sm = scaffoldManager;
   }
 
   const startingPath = process.cwd();
