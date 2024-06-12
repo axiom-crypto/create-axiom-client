@@ -18,16 +18,21 @@ export class ProjectScaffoldManager {
   fullPath: string;
   manager: string;
   chainId: string;
+  targetChainId?: string;
   installCmd: string;
   devFlag: string;
   actions: Action[];
 
-  constructor(basePath: string, manager: string, chainId: string) {
+  constructor(basePath: string, manager: string, chainId: string, targetChainId?: string) {
+    if (basePath === "" || manager === "" || chainId === "") {
+      throw new Error("`basePath`, `manager`, and `chainId` must be provided");
+    }
     this.createPath = path.resolve(basePath);
     this.basePath = basePath;
     this.fullPath = path.resolve(basePath);
     this.manager = manager;
     this.chainId = chainId;
+    this.targetChainId = targetChainId;
     this.installCmd = getInstallCmd(manager);
     this.devFlag = getDevFlag(manager);
     this.actions = [] as Action[];
@@ -151,7 +156,14 @@ export class ProjectScaffoldManager {
   findAndReplaceAll(description: string) {
       // Update chain ID
     findAndReplaceRecursive(this.fullPath, 'CHAIN_ID = "11155111"', `CHAIN_ID = "${this.chainId}"`);
-    findAndReplaceRecursive(this.fullPath, '--sourceChainId 11155111', `--sourceChainId ${this.chainId}`);
+    findAndReplaceRecursive(this.fullPath, 'SOURCE_CHAIN_ID = "11155111"', `SOURCE_CHAIN_ID = "${this.chainId}"`);
+    findAndReplaceRecursive(this.fullPath, '--source-chain-id 11155111', `--source-chain-id ${this.chainId}`);
+
+    // Update target chain ID
+    if (this.targetChainId) {
+      findAndReplaceRecursive(this.fullPath, 'TARGET_CHAIN_ID = "11155111"', `TARGET_CHAIN_ID = "${this.targetChainId}"`);
+      findAndReplaceRecursive(this.fullPath, '--target-chain-id 11155111', `--target-chain-id ${this.targetChainId}`);
+    }
 
     // Update provider URI for Foundry
     findAndReplaceRecursive(this.fullPath, 'PROVIDER_URI_11155111', `PROVIDER_URI_${this.chainId}`);

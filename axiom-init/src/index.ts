@@ -23,7 +23,11 @@ async function main() {
     .option("-p, --path <path>", "file path")
     .option("-s, --scaffold <type>", "type of scaffold (nextjs, script, forge, none)")
     .option("-m, --manager <name>", "package manager to use (npm, yarn, pnpm)")
-    .option("-c, --chainId <number>", "chainId (default: 11155111)")
+    .option("-sq, --single-chain", "single chain query (default)")
+    .option("-cq, --cross-chain", "cross chain query")
+    .option("-c, --chain-id <number>", "(samechain) chainId (default: 11155111)")
+    .option("-tc, --target-chain-id <number>", "(crosschain) target chainId (default: 84532)")
+    .option("-sc, --source-chain-id <number>", "(crosschain) source chainId (default: 11155111)")
     .action(init);
 
   const scaffold = program.command("scaffold")
