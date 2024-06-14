@@ -26,41 +26,49 @@ export const AverageBalance: Record<string, string> = {
   "84532": "0xC094A594bFd60abc521f5e033e4F681Cc87530f0.",
 };
 
+// AverageBalanceCrosschain[targetChainId][sourceChainId]
+export const AverageBalanceCrosschain: Record<string, Record<string, string>> = {
+  "84532": {
+    "11155111": "0x06442B357582282b4f7E76D47787dcF1C175fF1c",
+  }
+};
 
-export const Prompts: Record<string, any> = {
-  "path": {
-    name: "path",
-    type: "text",
-    message: "Path to initialize Axiom Forge project (default: './axiom-quickstart')?"
-  },
-  "scaffold": {
-    name: "scaffold",
-    type: "select",
-    choices: [
-      { title: "Next.js", value: "nextjs", description: "Next.js dApp (default)" }, 
-      { title: "Script", value: "script", description: "Simple test script" },
-      { title: "Forge", value: "forge", description: "Forge-only project" },
-    ],
-    message: "Type of Axiom app interface to use?"
-  },
-  "manager": {
-    name: "manager",
-    type: "select",
-    choices: [
-      { title: "npm", value: "npm", description: "Use npm as the package manager (default)" }, 
-      { title: "yarn", value: "yarn", description: "Use yarn as the package manager" },
-      { title: "pnpm", value: "pnpm", description: "Use pnpm as the package manager" },
-    ],
-    message: "Which package manager do you want to use for the project?"
-  },
-  "queryType": {
-    name: "queryType",
-    type: "select",
-    choices: [
-      { title: "Same-chain", value: "samechain", description: "Query and use data from the same chain (default)" },
-      { title: "Cross-chain", value: "crosschain", description: "Query data from one chain (source) and use it on another chain (target)" },
-    ],
-    message: "What type of Axiom query would you like to use?"
+export const Prompts: Record<string, Record<string, PromptObject>> = {
+  "common": {
+    "path": {
+      name: "path",
+      type: "text",
+      message: "Path to initialize Axiom Forge project (default: './axiom-quickstart')?"
+    },
+    "scaffold": {
+      name: "scaffold",
+      type: "select",
+      choices: [
+        { title: "Next.js", value: "nextjs", description: "Next.js dApp (default)" }, 
+        { title: "Script", value: "script", description: "Simple test script" },
+        { title: "Forge", value: "forge", description: "Forge-only project" },
+      ],
+      message: "Type of Axiom app interface to use?"
+    },
+    "manager": {
+      name: "manager",
+      type: "select",
+      choices: [
+        { title: "npm", value: "npm", description: "Use npm as the package manager (default)" }, 
+        { title: "yarn", value: "yarn", description: "Use yarn as the package manager" },
+        { title: "pnpm", value: "pnpm", description: "Use pnpm as the package manager" },
+      ],
+      message: "Which package manager do you want to use for the project?"
+    },
+    "queryType": {
+      name: "queryType",
+      type: "select",
+      choices: [
+        { title: "Same-chain", value: "samechain", description: "Query and use data from the same chain (default)" },
+        { title: "Cross-chain", value: "crosschain", description: "Query data from one chain (source) and use it on another chain (target)" },
+      ],
+      message: "What type of Axiom query would you like to use?"
+    },
   },
   "samechain": {
     "chainId": {

@@ -42,7 +42,7 @@ export const scaffoldNext = async (
   // Clone the Next.js scaffold
   console.log("\nFetching Axiom Next.js scaffold...");
   const tempDir = `.axiom-temp-nextjs-${Date.now()}`; 
-  await sm.execWithStream(`git clone --depth 1 https://github.com/axiom-crypto/axiom-scaffold-nextjs.git ${tempDir}`, [], "Clone Axiom Next.js scaffold");
+  await sm.execWithStream(`git clone -b feat/crosschain --depth 1 https://github.com/axiom-crypto/axiom-scaffold-nextjs.git ${tempDir}`, [], "Clone Axiom Next.js scaffold");
   sm.cp(`${tempDir}/.`, appPath, `  - Copy Next.js scaffold files to ${chalk.bold(appPath)}`);
 
   // Clean up cloned repo
@@ -53,6 +53,9 @@ export const scaffoldNext = async (
 
   // Remove .git folder from scaffold repo
   await sm.rm(".git", `  - Remove .git folder from Next.js scaffold`);
+
+  // Find and replace all
+  sm.handleCrosschainFolders("Rename folders for query type");
 
   // Find and replace all
   sm.findAndReplaceAll("Update chain data");

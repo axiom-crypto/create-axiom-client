@@ -3,7 +3,7 @@ import fs from 'fs';
 import util from 'util';
 import childProcess from 'child_process';
 import chalk from 'chalk';
-import { findAndReplaceRecursive, getDevFlag, getInstallCmd } from './utils';
+import { deleteDirectoryRecursive, findAndReplaceRecursive, getDevFlag, getInstallCmd, renameAllRecursive } from './utils';
 import { AverageBalance, ExampleV2Client } from '../constants';
 const exec = util.promisify(childProcess.exec);
 
@@ -19,6 +19,7 @@ export class ProjectScaffoldManager {
   manager: string;
   chainId: string;
   targetChainId?: string;
+  isCrosschain: boolean;
   installCmd: string;
   devFlag: string;
   actions: Action[];
@@ -33,6 +34,7 @@ export class ProjectScaffoldManager {
     this.manager = manager;
     this.chainId = chainId;
     this.targetChainId = targetChainId;
+    this.isCrosschain = targetChainId !== undefined;
     this.installCmd = getInstallCmd(manager);
     this.devFlag = getDevFlag(manager);
     this.actions = [] as Action[];
@@ -153,17 +155,26 @@ export class ProjectScaffoldManager {
     });
   }
 
+  handleCrosschainFolders(description: string) {
+    if (this.targetChainId) {
+      deleteDirectoryRecursive(this.fullPath, "-samechain");
+      renameAllRecursive(this.fullPath, "-crosschain", "");
+    } else {
+      deleteDirectoryRecursive(this.fullPath, "-crosschain");
+      renameAllRecursive(this.fullPath, "-samechain", "");
+    }
+
+    this.actions.push({
+      description,
+      status: chalk.green("OK")
+    });
+  }
+
   findAndReplaceAll(description: string) {
       // Update chain ID
     findAndReplaceRecursive(this.fullPath, 'CHAIN_ID = "11155111"', `CHAIN_ID = "${this.chainId}"`);
     findAndReplaceRecursive(this.fullPath, 'SOURCE_CHAIN_ID = "11155111"', `SOURCE_CHAIN_ID = "${this.chainId}"`);
     findAndReplaceRecursive(this.fullPath, '--source-chain-id 11155111', `--source-chain-id ${this.chainId}`);
-
-    // Update target chain ID
-    if (this.targetChainId) {
-      findAndReplaceRecursive(this.fullPath, 'TARGET_CHAIN_ID = "11155111"', `TARGET_CHAIN_ID = "${this.targetChainId}"`);
-      findAndReplaceRecursive(this.fullPath, '--target-chain-id 11155111', `--target-chain-id ${this.targetChainId}`);
-    }
 
     // Update provider URI for Foundry
     findAndReplaceRecursive(this.fullPath, 'PROVIDER_URI_11155111', `PROVIDER_URI_${this.chainId}`);
@@ -177,6 +188,19 @@ export class ProjectScaffoldManager {
 
     // Update deployed Average contract address
     findAndReplaceRecursive(this.fullPath, "0x50F2D5c9a4A35cb922a631019287881f56A00ED5", AverageBalance[this.chainId]);
+
+    // Make crosschain updates
+    if (this.targetChainId) {
+      // Update target chain ID
+      findAndReplaceRecursive(this.fullPath, 'TARGET_CHAIN_ID = "84532"', `TARGET_CHAIN_ID = "${this.targetChainId}"`);
+      findAndReplaceRecursive(this.fullPath, '--target-chain-id 84532', `--target-chain-id ${this.targetChainId}`);
+
+      // Next.js folders
+      findAndReplaceRecursive(this.fullPath, '-crosschain', ``);
+    } else {
+      // Next.js folders
+      findAndReplaceRecursive(this.fullPath, '-samechain', ``);
+    }
 
     this.actions.push({
       description,
