@@ -12,16 +12,15 @@ export const setup = async (
   scaffoldManager: ProjectScaffoldManager,
   answers: Record<string, string>,
 }> => {
-  console.log("setup opts", options);
   // Check that user has installed forge
   await validateForge();
 
   // List of questions
   let setupQuestions0: PromptObject[] = [
-    Prompts.path,
-    Prompts.scaffold,
-    Prompts.manager,
-    Prompts.queryType,
+    Prompts.common.path,
+    Prompts.common.scaffold,
+    Prompts.common.manager,
+    Prompts.common.queryType,
   ];
 
   let setupQuestions1: PromptObject[] = [
@@ -59,18 +58,18 @@ export const setup = async (
   }
 
   // Get queryType response and use it to determine which questions to ask next
-  let samechain = true;
+  let isCrosschain = false;
   const queryType = answers0.queryType;
   if (queryType === "samechain") {
-    samechain = true;
+    isCrosschain = false;
   } else if (queryType === "crosschain") {
-    samechain = false;
+    isCrosschain = true;
   } else {
     throw new Error(`Invalid query type: ${queryType}`);
   }
   
   let sourceChainId = "";
-  if (samechain) {
+  if (!isCrosschain) {
     // (samechain) Validate chainId answers in options
     if (parseAnswer("chainId", options, Options.chainId)) {
       setupQuestionsSamechain = filterQuestions("chainId", setupQuestionsSamechain);

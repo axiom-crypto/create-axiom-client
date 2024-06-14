@@ -52,7 +52,6 @@ export const findAndReplaceRecursive = (folder: string, find: string, replace: s
   if (!fs.existsSync(folder)) {
     return;
   }
-
   const items = fs.readdirSync(folder);
   items.forEach((item) => {
     const itemPath = path.join(folder, item);
@@ -66,6 +65,45 @@ export const findAndReplaceRecursive = (folder: string, find: string, replace: s
       let content = fs.readFileSync(itemPath, "utf8");
       content = content.replace(new RegExp(find, "g"), replace);
       fs.writeFileSync(itemPath, content, "utf8");
+    }
+  });
+}
+
+export const renameAllRecursive = (folder: string, find: string, replace: string) => {
+  if (!fs.existsSync(folder)) {
+    return;
+  }
+  const items = fs.readdirSync(folder);
+  items.forEach((item) => {
+    const itemPath = path.join(folder, item);
+    const stat = fs.statSync(itemPath);
+    if (stat.isDirectory()) {
+      renameAllRecursive(itemPath, find, replace);
+    }
+    if (item.includes(find)) {
+      const newItemPath = path.join(folder, item.replace(find, replace));
+      fs.renameSync(itemPath, newItemPath);
+    }
+  });
+}
+
+export const deleteDirectoryRecursive = (folder: string, find: string) => {
+  if (!fs.existsSync(folder)) {
+    return;
+  }
+  const items = fs.readdirSync(folder);
+  items.forEach((item) => {
+    const itemPath = path.join(folder, item);
+    const stat = fs.statSync(itemPath);
+    if (stat.isDirectory()) {
+      if (item.includes(find)) {
+        fs.rmSync(itemPath, { recursive: true, force: true });
+        return;
+      }
+      // Skip directories that start with a dot except `.github`
+      if (item === ".github" || !item.startsWith('.')) {
+        deleteDirectoryRecursive(itemPath, find);
+      }
     }
   });
 }
