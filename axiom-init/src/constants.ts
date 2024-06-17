@@ -23,14 +23,17 @@ export const AverageBalance: Record<string, string> = {
   "1": "",
   "11155111": "0x50F2D5c9a4A35cb922a631019287881f56A00ED5",
   "8453": "0xd08F7cE9d0De90dB17B33E1ff747ec515aB63747",
-  "84532": "0xC094A594bFd60abc521f5e033e4F681Cc87530f0.",
+  "84532": "0xC094A594bFd60abc521f5e033e4F681Cc87530f0",
 };
 
 // AverageBalanceCrosschain[targetChainId][sourceChainId]
 export const AverageBalanceCrosschain: Record<string, Record<string, string>> = {
   "84532": {
     "11155111": "0x06442B357582282b4f7E76D47787dcF1C175fF1c",
-  }
+  },
+  // "8453": {
+  //   "1": "",
+  // }
 };
 
 export const Prompts: Record<string, Record<string, PromptObject>> = {
@@ -89,6 +92,7 @@ export const Prompts: Record<string, Record<string, PromptObject>> = {
       type: "select",
       choices: [
         { title: "84532", value: "84532", description: "Base Sepolia (default)" }, 
+        // { title: "8453", value: "8453", description: "Base Mainnet" }, 
       ],
       message: "Which chain ID would you like your project to use for the target chain (where you send the Axiom query transaction)?"
     },
@@ -97,6 +101,7 @@ export const Prompts: Record<string, Record<string, PromptObject>> = {
       type: "select",
       choices: [
         { title: "11155111", value: "11155111", description: "Ethereum Sepolia (default)" }, 
+        // { title: "1", value: "1", description: "Ethereum Mainnet" },
       ],
       message: "Which chain ID would you like your project to use for the source chain (where the data is queried from)?"
     },

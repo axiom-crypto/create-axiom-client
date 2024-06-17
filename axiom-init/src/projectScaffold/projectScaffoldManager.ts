@@ -3,7 +3,7 @@ import fs from 'fs';
 import util from 'util';
 import childProcess from 'child_process';
 import chalk from 'chalk';
-import { deleteDirectoryRecursive, findAndReplaceRecursive, getDevFlag, getInstallCmd, renameAllRecursive } from './utils';
+import { deleteRecursive, findAndReplaceRecursive, getDevFlag, getInstallCmd, renameAllRecursive } from './utils';
 import { AverageBalance, ExampleV2Client } from '../constants';
 const exec = util.promisify(childProcess.exec);
 
@@ -155,12 +155,12 @@ export class ProjectScaffoldManager {
     });
   }
 
-  handleCrosschainFolders(description: string) {
+  handleCrosschainFilesAndFolders(description: string) {
     if (this.targetChainId) {
-      deleteDirectoryRecursive(this.fullPath, "-samechain");
+      deleteRecursive(this.fullPath, "-samechain");
       renameAllRecursive(this.fullPath, "-crosschain", "");
     } else {
-      deleteDirectoryRecursive(this.fullPath, "-crosschain");
+      deleteRecursive(this.fullPath, "-crosschain");
       renameAllRecursive(this.fullPath, "-samechain", "");
     }
 
@@ -177,8 +177,8 @@ export class ProjectScaffoldManager {
     findAndReplaceRecursive(this.fullPath, '--source-chain-id 11155111', `--source-chain-id ${this.chainId}`);
 
     // Update provider URI for Foundry
-    findAndReplaceRecursive(this.fullPath, 'PROVIDER_URI_11155111', `PROVIDER_URI_${this.chainId}`);
-    findAndReplaceRecursive(this.fullPath, 'RPC_URL_11155111', `RPC_URL_${this.chainId}`);
+    findAndReplaceRecursive(this.fullPath, 'source_provider = "${PROVIDER_URI_11155111}"', `source_provider = "\${PROVIDER_URI_${this.chainId}}"`);
+    findAndReplaceRecursive(this.fullPath, 'source_provider = "${RPC_URL_11155111}"', `source_provider = "\${RPC_URL_${this.chainId}}"`);
 
     // Update private key
     findAndReplaceRecursive(this.fullPath, 'PRIVATE_KEY_11155111', `PRIVATE_KEY_${this.chainId}`);
@@ -194,6 +194,10 @@ export class ProjectScaffoldManager {
       // Update target chain ID
       findAndReplaceRecursive(this.fullPath, 'TARGET_CHAIN_ID = "84532"', `TARGET_CHAIN_ID = "${this.targetChainId}"`);
       findAndReplaceRecursive(this.fullPath, '--target-chain-id 84532', `--target-chain-id ${this.targetChainId}`);
+
+      // Update provider URI for Foundry
+      findAndReplaceRecursive(this.fullPath, 'target_provider = "${PROVIDER_URI_84532}"', `target_provider = "\${PROVIDER_URI_${this.targetChainId}}"`);
+      findAndReplaceRecursive(this.fullPath, 'target_provider = "${RPC_URL_84532}"', `target_provider = "\${RPC_URL_${this.targetChainId}}"`);
 
       // Next.js folders
       findAndReplaceRecursive(this.fullPath, '-crosschain', ``);
