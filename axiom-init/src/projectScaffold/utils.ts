@@ -87,7 +87,7 @@ export const renameAllRecursive = (folder: string, find: string, replace: string
   });
 }
 
-export const deleteDirectoryRecursive = (folder: string, find: string) => {
+export const deleteRecursive = (folder: string, find: string) => {
   if (!fs.existsSync(folder)) {
     return;
   }
@@ -96,14 +96,13 @@ export const deleteDirectoryRecursive = (folder: string, find: string) => {
     const itemPath = path.join(folder, item);
     const stat = fs.statSync(itemPath);
     if (stat.isDirectory()) {
-      if (item.includes(find)) {
-        fs.rmSync(itemPath, { recursive: true, force: true });
-        return;
-      }
       // Skip directories that start with a dot except `.github`
       if (item === ".github" || !item.startsWith('.')) {
-        deleteDirectoryRecursive(itemPath, find);
+        deleteRecursive(itemPath, find);
       }
+    }
+    if (item.includes(find)) {
+      fs.rmSync(itemPath, { recursive: true, force: true });
     }
   });
 }

@@ -54,8 +54,8 @@ export const scaffoldNext = async (
   // Remove .git folder from scaffold repo
   await sm.rm(".git", `  - Remove .git folder from Next.js scaffold`);
 
-  // Find and replace all
-  sm.handleCrosschainFolders("Rename folders for query type");
+  // Handle crosschain files and folders
+  sm.handleCrosschainFilesAndFolders("Rename folders for query type");
 
   // Find and replace all
   sm.findAndReplaceAll("Update chain data");

@@ -68,20 +68,17 @@ export const setup = async (
     throw new Error(`Invalid query type: ${queryType}`);
   }
   
-  let sourceChainId = "";
   if (!isCrosschain) {
     // (samechain) Validate chainId answers in options
     if (parseAnswer("chainId", options, Options.chainId)) {
       setupQuestionsSamechain = filterQuestions("chainId", setupQuestionsSamechain);
     }
     setupQuestions1 = setupQuestionsSamechain;
-    sourceChainId = answers0.chainId;
   } else {
     // (crosschain) Validate sourceChainId answers in options
     if (parseAnswer("sourceChainId", options, Options.sourceChainId)) {
       setupQuestionsCrosschain = filterQuestions("sourceChainId", setupQuestionsCrosschain);
     }
-    sourceChainId = answers0.sourceChainId;
 
     // (crosschain) Validate targetChainId answers in options
     if (parseAnswer("targetChainId", options, Options.targetChainId)) {
@@ -99,11 +96,15 @@ export const setup = async (
     ...toFilter,
   }
 
+  let sourceChainId = answers.sourceChainId || answers.chainId!;
+  let targetChainId = answers.targetChainId;
+
   // Validate that the package manager the user has selected is installed
   validatePackageManager(answers.manager);
 
   // Initialize scaffold manager
-  const scaffoldManager = new ProjectScaffoldManager(answers.path!, answers.manager!, sourceChainId, answers.targetChainId);
+  console.log("ANS", answers.path!, answers.manager!, sourceChainId, answers.targetChainId)
+  const scaffoldManager = new ProjectScaffoldManager(answers.path!, answers.manager!, sourceChainId, targetChainId);
   return {
     scaffoldManager,
     answers,
