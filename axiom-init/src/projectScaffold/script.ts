@@ -57,6 +57,9 @@ export const scaffoldScript = async (
   // Find and replace all
   sm.findAndReplaceAll("Update chain data");
 
+  // Update submodule s
+  await sm.execWithStream(`git submodule update --remote`, [], "Update submodules");
+
   // Install package dependencies
   console.log("\nInstalling package dependencies...");
   await sm.execWithStream(sm.manager, [sm.installCmd], `Install package dependencies`);

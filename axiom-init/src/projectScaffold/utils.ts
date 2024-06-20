@@ -82,6 +82,9 @@ export const renameAllRecursive = (folder: string, find: string, replace: string
     }
     if (item.includes(find)) {
       const newItemPath = path.join(folder, item.replace(find, replace));
+      if (fs.existsSync(newItemPath)) {
+        fs.rmSync(newItemPath, { recursive: true, force: true });
+      }
       fs.renameSync(itemPath, newItemPath);
     }
   });
