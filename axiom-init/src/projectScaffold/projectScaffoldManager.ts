@@ -177,8 +177,8 @@ export class ProjectScaffoldManager {
     findAndReplaceRecursive(this.fullPath, '--source-chain-id 11155111', `--source-chain-id ${this.chainId}`);
 
     // Update provider URI for Foundry
-    findAndReplaceRecursive(this.fullPath, 'source_provider = "${PROVIDER_URI_11155111}"', `source_provider = "\${PROVIDER_URI_${this.chainId}}"`);
-    findAndReplaceRecursive(this.fullPath, 'source_provider = "${RPC_URL_11155111}"', `source_provider = "\${RPC_URL_${this.chainId}}"`);
+    findAndReplaceRecursive(this.fullPath, 'source_provider = "\\${PROVIDER_URI_11155111}"', `source_provider = "\${PROVIDER_URI_${this.chainId}}"`);
+    findAndReplaceRecursive(this.fullPath, 'source_provider = "\\${RPC_URL_11155111}"', `source_provider = "\${RPC_URL_${this.chainId}}"`);
 
     // Update private key
     findAndReplaceRecursive(this.fullPath, 'PRIVATE_KEY_11155111', `PRIVATE_KEY_${this.chainId}`);
@@ -196,8 +196,8 @@ export class ProjectScaffoldManager {
       findAndReplaceRecursive(this.fullPath, '--target-chain-id 84532', `--target-chain-id ${this.targetChainId}`);
 
       // Update provider URI for Foundry
-      findAndReplaceRecursive(this.fullPath, 'target_provider = "${PROVIDER_URI_84532}"', `target_provider = "\${PROVIDER_URI_${this.targetChainId}}"`);
-      findAndReplaceRecursive(this.fullPath, 'target_provider = "${RPC_URL_84532}"', `target_provider = "\${RPC_URL_${this.targetChainId}}"`);
+      findAndReplaceRecursive(this.fullPath, 'target_provider = "\\${PROVIDER_URI_84532}"', `target_provider = "\${PROVIDER_URI_${this.targetChainId}}"`);
+      findAndReplaceRecursive(this.fullPath, 'target_provider = "\\${RPC_URL_84532}"', `target_provider = "\${RPC_URL_${this.targetChainId}}"`);
 
       // Next.js folders
       findAndReplaceRecursive(this.fullPath, '-crosschain', ``);
