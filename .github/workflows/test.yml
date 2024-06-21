@@ -4,31 +4,30 @@ on:
   pull_request:
   push:
     branches:
-        - main
-        - staging
+      - main
+      - staging
 
 env:
-    RPC_URL_1: ${{ secrets.RPC_URL_1 }}
-    RPC_URL_11155111: ${{ secrets.RPC_URL_11155111 }}
-    RPC_URL_8453: ${{ secrets.RPC_URL_8453 }}
-    RPC_URL_84532: ${{ secrets.RPC_URL_84532 }}
-    PROVIDER_URI_1: ${{ secrets.RPC_URL_1 }}
-    PROVIDER_URI_11155111: ${{ secrets.RPC_URL_11155111 }}
-    PROVIDER_URI_8453: ${{ secrets.RPC_URL_8453 }}
-    PROVIDER_URI_84532: ${{ secrets.RPC_URL_84532 }}
-    PRIVATE_KEY_11155111: ${{ secrets.PRIVATE_KEY_11155111 }}
-    PRIVATE_KEY_8453: ${{ secrets.PRIVATE_KEY_8453 }}
-    PRIVATE_KEY_84532: ${{ secrets.PRIVATE_KEY_84532 }}
-    NEXT_PUBLIC_RPC_URL_11155111: ${{ secrets.RPC_URL_11155111 }}
-    NEXT_PUBLIC_RPC_URL_8453: ${{ secrets.RPC_URL_8453 }}
-    NEXT_PUBLIC_RPC_URL_84532: ${{ secrets.RPC_URL_84532 }}
-    NEXT_PUBLIC_PROVIDER_URI_11155111: ${{ secrets.RPC_URL_11155111 }}
-    NEXT_PUBLIC_PROVIDER_URI_8453: ${{ secrets.RPC_URL_8453 }}
-    NEXT_PUBLIC_PROVIDER_URI_84532: ${{ secrets.RPC_URL_84532 }}
-    NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID: ${{ secrets.WALLETCONNECT_PROJECT_ID }}
+  RPC_URL_1: ${{ secrets.RPC_URL_1 }}
+  RPC_URL_11155111: ${{ secrets.RPC_URL_11155111 }}
+  RPC_URL_8453: ${{ secrets.RPC_URL_8453 }}
+  RPC_URL_84532: ${{ secrets.RPC_URL_84532 }}
+  PROVIDER_URI_1: ${{ secrets.RPC_URL_1 }}
+  PROVIDER_URI_11155111: ${{ secrets.RPC_URL_11155111 }}
+  PROVIDER_URI_8453: ${{ secrets.RPC_URL_8453 }}
+  PROVIDER_URI_84532: ${{ secrets.RPC_URL_84532 }}
+  PRIVATE_KEY_11155111: ${{ secrets.PRIVATE_KEY_11155111 }}
+  PRIVATE_KEY_8453: ${{ secrets.PRIVATE_KEY_8453 }}
+  PRIVATE_KEY_84532: ${{ secrets.PRIVATE_KEY_84532 }}
+  NEXT_PUBLIC_RPC_URL_11155111: ${{ secrets.RPC_URL_11155111 }}
+  NEXT_PUBLIC_RPC_URL_8453: ${{ secrets.RPC_URL_8453 }}
+  NEXT_PUBLIC_RPC_URL_84532: ${{ secrets.RPC_URL_84532 }}
+  NEXT_PUBLIC_PROVIDER_URI_11155111: ${{ secrets.RPC_URL_11155111 }}
+  NEXT_PUBLIC_PROVIDER_URI_8453: ${{ secrets.RPC_URL_8453 }}
+  NEXT_PUBLIC_PROVIDER_URI_84532: ${{ secrets.RPC_URL_84532 }}
+  NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID: ${{ secrets.WALLETCONNECT_PROJECT_ID }}
 
 jobs:
-  
   ##
   # Next.js tests
   #
@@ -72,7 +71,7 @@ jobs:
 
       - name: Compile circuit
         working-directory: ./axiom-init/app-nextjs
-        run: npx axiom circuit compile app/axiom/average.circuit.ts -p ${{ env.RPC_URL_11155111 }} --force
+        run: npx axiom circuit compile app/axiom/average.circuit.ts -sr ${{ env.RPC_URL_11155111 }} --force
 
       - name: Forge test
         working-directory: ./axiom-init/app-nextjs
@@ -96,22 +95,22 @@ jobs:
       - uses: actions/checkout@v4
         with:
           submodules: recursive
-      
+
       - name: Enable Corepack
         run: corepack enable
-      
+
       - name: Use Node.js 20.x
         uses: actions/setup-node@v4
         with:
-          node-version: '20.x'
-          cache: 'yarn'
+          node-version: "20.x"
+          cache: "yarn"
           registry-url: "https://registry.npmjs.org"
           cache-dependency-path: axiom-init/yarn.lock
-      
+
       - name: Install yarn packages
         working-directory: ./axiom-init
         run: yarn --no-lockfile
-      
+
       - name: Set Git user
         run: |
           git config --global user.name "Axiom CI"
@@ -139,7 +138,7 @@ jobs:
 
       - name: Compile circuit
         working-directory: ./axiom-init/app-nextjs
-        run: yarn axiom circuit compile app/axiom/average.circuit.ts -p ${{ env.RPC_URL_11155111 }} --force
+        run: yarn axiom circuit compile app/axiom/average.circuit.ts -sr ${{ env.RPC_URL_11155111 }} --force
 
       - name: Forge test
         working-directory: ./axiom-init/app-nextjs
@@ -155,7 +154,7 @@ jobs:
       - name: Build Next.js app
         working-directory: ./axiom-init/app-nextjs/app
         run: yarn build
-  
+
   test-nextjs-pnpm:
     name: "axiom-init: Next.js (pnpm)"
     runs-on: ubuntu-latest
@@ -163,22 +162,22 @@ jobs:
       - uses: actions/checkout@v4
         with:
           submodules: recursive
-      
+
       - name: Enable Corepack
         run: corepack enable
-      
+
       - name: Use Node.js 20.x
         uses: actions/setup-node@v4
         with:
-          node-version: '20.x'
-          cache: 'pnpm'
+          node-version: "20.x"
+          cache: "pnpm"
           registry-url: "https://registry.npmjs.org"
           cache-dependency-path: axiom-init/pnpm-lock.yaml
-      
+
       - name: Install pnpm packages
         working-directory: ./axiom-init
         run: pnpm install --no-lockfile
-      
+
       - name: Set Git user
         run: |
           git config --global user.name "Axiom CI"
@@ -206,7 +205,7 @@ jobs:
 
       - name: Compile circuit
         working-directory: ./axiom-init/app-nextjs
-        run: pnpm axiom circuit compile app/axiom/average.circuit.ts -p ${{ env.RPC_URL_84532 }} --force
+        run: pnpm axiom circuit compile app/axiom/average.circuit.ts -sr ${{ env.RPC_URL_84532 }} --force
 
       - name: Forge test
         working-directory: ./axiom-init/app-nextjs
@@ -222,7 +221,6 @@ jobs:
       - name: Build Next.js app
         working-directory: ./axiom-init/app-nextjs/app
         run: pnpm build
-  
 
   ##
   # Script tests
@@ -267,7 +265,7 @@ jobs:
 
       - name: Compile circuit
         working-directory: ./axiom-init/app-script
-        run: npx axiom circuit compile app/axiom/average.circuit.ts -p ${{ env.RPC_URL_84532 }} --force
+        run: npx axiom circuit compile app/axiom/average.circuit.ts -sr ${{ env.RPC_URL_84532 }} --force
 
       - name: Forge test
         working-directory: ./axiom-init/app-script
@@ -293,15 +291,15 @@ jobs:
 
       - name: Enable Corepack
         run: corepack enable
-      
+
       - name: Use Node.js 20.x
         uses: actions/setup-node@v4
         with:
-          node-version: '20.x'
-          cache: 'yarn'
+          node-version: "20.x"
+          cache: "yarn"
           registry-url: "https://registry.npmjs.org"
           cache-dependency-path: axiom-init/yarn.lock
-      
+
       - name: Install yarn packages
         working-directory: ./axiom-init
         run: yarn --no-lockfile
@@ -329,7 +327,7 @@ jobs:
 
       - name: Compile circuit
         working-directory: ./axiom-init/app-script
-        run: npx axiom circuit compile app/axiom/average.circuit.ts -p ${{ env.RPC_URL_11155111 }} --force
+        run: npx axiom circuit compile app/axiom/average.circuit.ts -sr ${{ env.RPC_URL_11155111 }} --force
 
       - name: Forge test
         working-directory: ./axiom-init/app-script
@@ -355,15 +353,15 @@ jobs:
 
       - name: Enable Corepack
         run: corepack enable
-      
+
       - name: Use Node.js 20.x
         uses: actions/setup-node@v4
         with:
-          node-version: '20.x'
-          cache: 'pnpm'
+          node-version: "20.x"
+          cache: "pnpm"
           registry-url: "https://registry.npmjs.org"
           cache-dependency-path: axiom-init/pnpm-lock.yaml
-      
+
       - name: Install pnpm packages
         working-directory: ./axiom-init
         run: pnpm install --no-lockfile
@@ -391,7 +389,7 @@ jobs:
 
       - name: Compile circuit
         working-directory: ./axiom-init/app-script
-        run: pnpm axiom circuit compile app/axiom/average.circuit.ts -p ${{ env.RPC_URL_1 }} --force
+        run: pnpm axiom circuit compile app/axiom/average.circuit.ts -sr ${{ env.RPC_URL_1 }} --force
 
       - name: Forge test
         working-directory: ./axiom-init/app-script
@@ -406,7 +404,6 @@ jobs:
       # - name: Send query
       #   working-directory: ./axiom-init/app-script/app
       #   run: pnpm start
-      
 
   ##
   # Forge-only tests
@@ -451,12 +448,11 @@ jobs:
 
       - name: Compile circuit
         working-directory: ./axiom-init/app-forge
-        run: npx axiom circuit compile app/axiom/average.circuit.ts -p ${{ env.RPC_URL_1 }} --force
+        run: npx axiom circuit compile app/axiom/average.circuit.ts -sr ${{ env.RPC_URL_1 }} --force
 
       - name: Forge test
         working-directory: ./axiom-init/app-forge
         run: forge test -vvv
-
 
   test-forge-yarn:
     name: "axiom-init: Forge (yarn)"
@@ -468,15 +464,15 @@ jobs:
 
       - name: Enable Corepack
         run: corepack enable
-      
+
       - name: Use Node.js 20.x
         uses: actions/setup-node@v4
         with:
-          node-version: '20.x'
-          cache: 'yarn'
+          node-version: "20.x"
+          cache: "yarn"
           registry-url: "https://registry.npmjs.org"
           cache-dependency-path: axiom-init/yarn.lock
-      
+
       - name: Install yarn packages
         working-directory: ./axiom-init
         run: yarn --no-lockfile
@@ -508,12 +504,11 @@ jobs:
 
       - name: Compile circuit
         working-directory: ./axiom-init/app-forge
-        run: yarn axiom circuit compile app/axiom/average.circuit.ts -p ${{ env.RPC_URL_84532 }} --force
+        run: yarn axiom circuit compile app/axiom/average.circuit.ts -sr ${{ env.RPC_URL_84532 }} --force
 
       - name: Forge test
         working-directory: ./axiom-init/app-forge
         run: forge test -vvv
-
 
   test-forge-pnpm:
     name: "axiom-init: Forge (pnpm)"
@@ -563,7 +558,61 @@ jobs:
 
       - name: Compile circuit
         working-directory: ./axiom-init/app-forge
-        run: pnpm axiom circuit compile app/axiom/average.circuit.ts -p ${{ env.RPC_URL_11155111 }} --force
+        run: pnpm axiom circuit compile app/axiom/average.circuit.ts -sr ${{ env.RPC_URL_11155111 }} --force
+
+      - name: Forge test
+        working-directory: ./axiom-init/app-forge
+        run: forge test -vvv
+
+  test-crosschain-nextjs-npm:
+    name: "axiom-init: Crosschain Next.js (npm)"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8
+
+      - name: "Install Node.js"
+        uses: "actions/setup-node@v4"
+        with:
+          node-version: "20.x"
+          cache: "pnpm"
+          registry-url: "https://registry.npmjs.org"
+          cache-dependency-path: axiom-init/pnpm-lock.yaml
+
+      - name: Set Git user
+        run: |
+          git config --global user.name "Axiom CI"
+          git config --global user.email "ci@axiom.xyz"
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly
+
+      - name: Check forge version
+        run: forge --version
+
+      - name: Install pnpm packages
+        working-directory: ./axiom-init
+        run: pnpm install
+
+      - name: Build axiom-init
+        working-directory: ./axiom-init
+        run: pnpm run build
+
+      - name: Initialize app
+        working-directory: ./axiom-init
+        run: node dist/index.js init -p app-forge -s nextjs -m npm -cq -sc 11155111 -tc 84532
+
+      - name: Compile circuit
+        working-directory: ./axiom-init/app-forge
+        run: pnpm axiom circuit compile app/axiom/average.circuit.ts -sr ${{ env.RPC_URL_11155111 }} --force
 
       - name: Forge test
         working-directory: ./axiom-init/app-forge
