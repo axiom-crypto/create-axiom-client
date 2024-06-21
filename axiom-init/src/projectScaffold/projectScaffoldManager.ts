@@ -190,7 +190,7 @@ export class ProjectScaffoldManager {
     findAndReplaceRecursive(this.fullPath, "0x50F2D5c9a4A35cb922a631019287881f56A00ED5", AverageBalance[this.chainId]);
 
     // Make crosschain updates
-    if (this.targetChainId) {
+    if (this.isCrosschain) {
       // Update target chain ID
       findAndReplaceRecursive(this.fullPath, 'TARGET_CHAIN_ID = "84532"', `TARGET_CHAIN_ID = "${this.targetChainId}"`);
       findAndReplaceRecursive(this.fullPath, '--target-chain-id 84532', `--target-chain-id ${this.targetChainId}`);
@@ -198,13 +198,11 @@ export class ProjectScaffoldManager {
       // Update provider URI for Foundry
       findAndReplaceRecursive(this.fullPath, 'target_provider = "\\${PROVIDER_URI_84532}"', `target_provider = "\${PROVIDER_URI_${this.targetChainId}}"`);
       findAndReplaceRecursive(this.fullPath, 'target_provider = "\\${RPC_URL_84532}"', `target_provider = "\${RPC_URL_${this.targetChainId}}"`);
-
-      // Next.js folders
-      findAndReplaceRecursive(this.fullPath, '-crosschain', ``);
-    } else {
-      // Next.js folders
-      findAndReplaceRecursive(this.fullPath, '-samechain', ``);
     }
+
+    // Remove query type annotations (expect `handleCrosschainFilesAndFolders` to be run before this is called)
+    findAndReplaceRecursive(this.fullPath, '-samechain', '');
+    findAndReplaceRecursive(this.fullPath, '-crosschain', '');
 
     this.actions.push({
       description,
