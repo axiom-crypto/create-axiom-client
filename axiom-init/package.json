@@ -1,11 +1,11 @@
 {
   "name": "axiom-init",
   "description": "Initialize a new Axiom project",
-  "version": "0.1.7",
+  "version": "0.2.0",
   "author": "Intrinsic Technologies",
   "scripts": {
     "build": "rm -rf dist && node ./script/preBuild.js && tsc",
-    "test": "pnpm build && rm -rf axiom-quickstart && node ./dist/index.js",
+    "test": "pnpm build && rm -rf axiom-quickstart && node ./dist/index.js && cp .env axiom-quickstart/. && cp .env.local axiom-quickstart/app/.",
     "prepublishOnly": "npm run build"
   },
   "bin": {

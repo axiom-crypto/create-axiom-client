@@ -4,7 +4,10 @@ import { PromptObject } from "prompts";
 export const Options: Record<string, string[]> = {
   scaffold: ["nextjs", "script", "forge"],
   manager: ["npm", "yarn", "pnpm"],
+  queryType: ["samechain", "crosschain"],
   chainId: ["11155111", "84532", "1" /*, "8453" */],
+  targetChainId: ["84532"],
+  sourceChainId: ["11155111"],
 };
 
 // deployed ExampleV2Client contract address
@@ -20,45 +23,87 @@ export const AverageBalance: Record<string, string> = {
   "1": "",
   "11155111": "0x50F2D5c9a4A35cb922a631019287881f56A00ED5",
   "8453": "0xd08F7cE9d0De90dB17B33E1ff747ec515aB63747",
-  "84532": "0xC094A594bFd60abc521f5e033e4F681Cc87530f0.",
+  "84532": "0xC094A594bFd60abc521f5e033e4F681Cc87530f0",
 };
 
+// AverageBalanceCrosschain[targetChainId][sourceChainId]
+export const AverageBalanceCrosschain: Record<string, Record<string, string>> = {
+  "84532": {
+    "11155111": "0x06442B357582282b4f7E76D47787dcF1C175fF1c",
+  },
+  // "8453": {
+  //   "1": "",
+  // }
+};
 
-export const Prompts: Record<string, PromptObject> = {
-  "path": {
-    name: "path",
-    type: "text",
-    message: "Path to initialize Axiom Forge project (default: './axiom-quickstart')?"
+export const Prompts: Record<string, Record<string, PromptObject>> = {
+  "common": {
+    "path": {
+      name: "path",
+      type: "text",
+      message: "Path to initialize Axiom Forge project (default: './axiom-quickstart')?"
+    },
+    "scaffold": {
+      name: "scaffold",
+      type: "select",
+      choices: [
+        { title: "Next.js", value: "nextjs", description: "Next.js dApp (default)" }, 
+        { title: "Script", value: "script", description: "Simple test script" },
+        { title: "Forge", value: "forge", description: "Forge-only project" },
+      ],
+      message: "Type of Axiom app interface to use?"
+    },
+    "manager": {
+      name: "manager",
+      type: "select",
+      choices: [
+        { title: "npm", value: "npm", description: "Use npm as the package manager (default)" }, 
+        { title: "yarn", value: "yarn", description: "Use yarn as the package manager" },
+        { title: "pnpm", value: "pnpm", description: "Use pnpm as the package manager" },
+      ],
+      message: "Which package manager do you want to use for the project?"
+    },
+    "queryType": {
+      name: "queryType",
+      type: "select",
+      choices: [
+        { title: "Same-chain", value: "samechain", description: "Query and use data from the same chain (default)" },
+        { title: "Cross-chain", value: "crosschain", description: "Query data from one chain (source) and use it on another chain (target)" },
+      ],
+      message: "What type of Axiom query would you like to use?"
+    },
   },
-  "scaffold": {
-    name: "scaffold",
-    type: "select",
-    choices: [
-      { title: "Next.js", value: "nextjs", description: "Next.js dApp (default)" }, 
-      { title: "Script", value: "script", description: "Simple test script" },
-      { title: "Forge", value: "forge", description: "Forge-only project" },
-    ],
-    message: "Type of Axiom app interface to use?"
+  "samechain": {
+    "chainId": {
+      name: "chainId",
+      type: "select",
+      choices: [
+        { title: "11155111", value: "11155111", description: "Ethereum Sepolia (default)" }, 
+        { title: "84532", value: "84532", description: "Base Sepolia" },
+        { title: "1", value: "1", description: "Ethereum Mainnet" },
+        // { title: "8453", value: "8453", description: "Base Mainnet" },
+      ],
+      message: "Which chain ID would you like your project to use?"
+    },
   },
-  "manager": {
-    name: "manager",
-    type: "select",
-    choices: [
-      { title: "npm", value: "npm", description: "Use npm as the package manager (default)" }, 
-      { title: "yarn", value: "yarn", description: "Use yarn as the package manager" },
-      { title: "pnpm", value: "pnpm", description: "Use pnpm as the package manager" },
-    ],
-    message: "Which package manager do you want to use for the project?"
-  },
-  "chainId": {
-    name: "chainId",
-    type: "select",
-    choices: [
-      { title: "11155111", value: "11155111", description: "Ethereum Sepolia (default)" }, 
-      { title: "84532", value: "84532", description: "Base Sepolia" },
-      { title: "1", value: "1", description: "Ethereum Mainnet" },
-      // { title: "8453", value: "8453", description: "Base Mainnet" },
-    ],
-    message: "Which chain ID would you like your project to use?"
+  "crosschain": {
+    "targetChainId": {
+      name: "targetChainId",
+      type: "select",
+      choices: [
+        { title: "84532", value: "84532", description: "Base Sepolia (default)" }, 
+        // { title: "8453", value: "8453", description: "Base Mainnet" }, 
+      ],
+      message: "Which chain ID would you like your project to use for the target chain (where you send the Axiom query transaction)?"
+    },
+    "sourceChainId": {
+      name: "sourceChainId",
+      type: "select",
+      choices: [
+        { title: "11155111", value: "11155111", description: "Ethereum Sepolia (default)" }, 
+        // { title: "1", value: "1", description: "Ethereum Mainnet" },
+      ],
+      message: "Which chain ID would you like your project to use for the source chain (where the data is queried from)?"
+    },
   }
 }

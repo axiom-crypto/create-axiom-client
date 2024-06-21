@@ -10,7 +10,10 @@ export const validateForge = async () => {
   }
 }
 
-export const validatePackageManager = (manager: string) => {
+export const validatePackageManager = (manager?: string) => {
+  if (manager === undefined) {
+    throw new Error("Please provide a package manager");
+  }
   switch(manager) {
     case "npm":
       validateNpm();
