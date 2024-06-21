@@ -60,12 +60,12 @@ export const setup = async (
   // Get queryType response and use it to determine which questions to ask next
   let isCrosschain = false;
   const queryType = answers0.queryType;
-  if (queryType === "samechain") {
-    isCrosschain = false;
-  } else if (queryType === "crosschain") {
+  if (queryType === "crosschain") {
     isCrosschain = true;
+  } else if (!queryType || queryType === "samechain") {
+    isCrosschain = false;
   } else {
-    throw new Error(`Invalid query type: ${queryType}`);
+    throw new Error(`Invalid query type: ${queryType}. Valid query types are ('samechain', 'crosschain')`);
   }
   
   if (!isCrosschain) {
