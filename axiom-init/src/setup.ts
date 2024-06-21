@@ -56,6 +56,10 @@ export const setup = async (
   if (!answers0.path || answers0.path === "") {
     answers0.path = "axiom-quickstart";
   }
+  answers0 = {
+    ...answers0,
+    ...options,
+  }
 
   // Get queryType response and use it to determine which questions to ask next
   let isCrosschain = false;
@@ -86,8 +90,7 @@ export const setup = async (
     }
     setupQuestions1 = setupQuestionsCrosschain;
   }
-
-  let answers1 = await prompt(setupQuestions1)
+  let answers1 = await prompt(setupQuestions1);
 
   let answers = {
     ...answers0,
