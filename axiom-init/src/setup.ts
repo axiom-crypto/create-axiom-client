@@ -103,7 +103,6 @@ export const setup = async (
   validatePackageManager(answers.manager);
 
   // Initialize scaffold manager
-  console.log("ANS", answers.path!, answers.manager!, sourceChainId, answers.targetChainId)
   const scaffoldManager = new ProjectScaffoldManager(answers.path!, answers.manager!, sourceChainId, targetChainId);
   return {
     scaffoldManager,
