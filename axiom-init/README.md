@@ -1,6 +1,6 @@
 # Axiom Init
 
-Initializes an Axiom project.
+Initializes an Axiom project. `axiom-init` should be run from `create-axiom-client` and not directly.
 
 ## Introduction
 
