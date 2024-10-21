@@ -57,7 +57,7 @@ jobs:
 
       - name: Initialize app
         working-directory: ./axiom-init
-        run: node dist/index.js init -p app-nextjs -s nextjs -m npm -q samechain -c 11155111
+        run: node dist/index.js init -p app-nextjs -s nextjs -m npm -c 11155111
 
       - name: Compile circuit
         working-directory: ./axiom-init/app-nextjs
@@ -124,7 +124,7 @@ jobs:
 
       - name: Initialize app
         working-directory: ./axiom-init
-        run: node dist/index.js init -p app-nextjs -s nextjs -m yarn -q samechain -c 11155111
+        run: node dist/index.js init -p app-nextjs -s nextjs -m yarn -c 11155111
 
       - name: Compile circuit
         working-directory: ./axiom-init/app-nextjs
@@ -191,7 +191,7 @@ jobs:
 
       - name: Initialize app
         working-directory: ./axiom-init
-        run: node dist/index.js init -p app-nextjs -s nextjs -m pnpm -q samechain -c 11155111
+        run: node dist/index.js init -p app-nextjs -s nextjs -m pnpm -c 11155111
 
       - name: Compile circuit
         working-directory: ./axiom-init/app-nextjs
@@ -251,7 +251,7 @@ jobs:
 
       - name: Initialize app
         working-directory: ./axiom-init
-        run: node dist/index.js init -p app-script -s script -m npm -q samechain -c 11155111
+        run: node dist/index.js init -p app-script -s script -m npm -c 11155111
 
       - name: Compile circuit
         working-directory: ./axiom-init/app-script
@@ -313,7 +313,7 @@ jobs:
 
       - name: Initialize app
         working-directory: ./axiom-init
-        run: node dist/index.js init -p app-script -s script -m yarn -q samechain -c 11155111
+        run: node dist/index.js init -p app-script -s script -m yarn -c 11155111
 
       - name: Compile circuit
         working-directory: ./axiom-init/app-script
@@ -375,7 +375,7 @@ jobs:
 
       - name: Initialize app
         working-directory: ./axiom-init
-        run: node dist/index.js init -p app-script -s script -m pnpm -q samechain -c 1
+        run: node dist/index.js init -p app-script -s script -m pnpm -c 1
 
       - name: Compile circuit
         working-directory: ./axiom-init/app-script
@@ -434,7 +434,7 @@ jobs:
 
       - name: Initialize app
         working-directory: ./axiom-init
-        run: node dist/index.js init -p app-forge -s forge -m npm -q samechain -c 1
+        run: node dist/index.js init -p app-forge -s forge -m npm -c 1
 
       - name: Compile circuit
         working-directory: ./axiom-init/app-forge
@@ -490,7 +490,7 @@ jobs:
 
       - name: Initialize app
         working-directory: ./axiom-init
-        run: node dist/index.js init -p app-forge -s forge -m yarn -q samechain -c 11155111
+        run: node dist/index.js init -p app-forge -s forge -m yarn -c 11155111
 
       - name: Compile circuit
         working-directory: ./axiom-init/app-forge
@@ -544,7 +544,7 @@ jobs:
 
       - name: Initialize app
         working-directory: ./axiom-init
-        run: node dist/index.js init -p app-forge -s forge -m pnpm -q samechain -c 11155111
+        run: node dist/index.js init -p app-forge -s forge -m pnpm -c 11155111
 
       - name: Compile circuit
         working-directory: ./axiom-init/app-forge
