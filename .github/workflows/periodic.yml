@@ -7,8 +7,6 @@ on:
 
 env:
   RPC_URL_11155111: ${{ secrets.RPC_URL_11155111 }}
-  RPC_URL_8453: ${{ secrets.RPC_URL_8453 }}
-  RPC_URL_84532: ${{ secrets.RPC_URL_84532 }}
 
 jobs:
   create-axiom-client-periodic-test:
@@ -75,7 +73,7 @@ jobs:
         run: |
           export PNPM_HOME="/home/runner/.local/share/pnpm"
           export PATH="$PNPM_HOME:$PATH"
-          npm_config_yes=true npx create-axiom-client init -p axiom-app -s ${{ env.SCAFFOLD }} -m ${{ env.PKG }} -q samechain -c 11155111
+          npm_config_yes=true npx create-axiom-client init -p axiom-app -s ${{ env.SCAFFOLD }} -m ${{ env.PKG }} -c 11155111
 
       - name: Write local .env file
         working-directory: ./axiom-app
