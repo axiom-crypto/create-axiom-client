@@ -18,13 +18,11 @@ export class ProjectScaffoldManager {
   fullPath: string;
   manager: string;
   chainId: string;
-  targetChainId?: string;
-  isCrosschain: boolean;
   installCmd: string;
   devFlag: string;
   actions: Action[];
 
-  constructor(basePath: string, manager: string, chainId: string, targetChainId?: string) {
+  constructor(basePath: string, manager: string, chainId: string) {
     if (basePath === "" || manager === "" || chainId === "") {
       throw new Error("`basePath`, `manager`, and `chainId` must be provided");
     }
@@ -33,8 +31,6 @@ export class ProjectScaffoldManager {
     this.fullPath = path.resolve(basePath);
     this.manager = manager;
     this.chainId = chainId;
-    this.targetChainId = targetChainId;
-    this.isCrosschain = targetChainId !== undefined;
     this.installCmd = getInstallCmd(manager);
     this.devFlag = getDevFlag(manager);
     this.actions = [] as Action[];
@@ -155,21 +151,6 @@ export class ProjectScaffoldManager {
     });
   }
 
-  handleCrosschainFilesAndFolders(description: string) {
-    if (this.targetChainId) {
-      deleteRecursive(this.fullPath, "-samechain");
-      renameAllRecursive(this.fullPath, "-crosschain", "");
-    } else {
-      deleteRecursive(this.fullPath, "-crosschain");
-      renameAllRecursive(this.fullPath, "-samechain", "");
-    }
-
-    this.actions.push({
-      description,
-      status: chalk.green("OK")
-    });
-  }
-
   findAndReplaceAll(description: string) {
       // Update chain ID
     findAndReplaceRecursive(this.fullPath, 'CHAIN_ID = "11155111"', `CHAIN_ID = "${this.chainId}"`);
@@ -188,21 +169,6 @@ export class ProjectScaffoldManager {
 
     // Update deployed Average contract address
     findAndReplaceRecursive(this.fullPath, "0x50F2D5c9a4A35cb922a631019287881f56A00ED5", AverageBalance[this.chainId]);
-
-    // Make crosschain updates
-    if (this.isCrosschain) {
-      // Update target chain ID
-      findAndReplaceRecursive(this.fullPath, 'TARGET_CHAIN_ID = "84532"', `TARGET_CHAIN_ID = "${this.targetChainId}"`);
-      findAndReplaceRecursive(this.fullPath, '--target-chain-id 84532', `--target-chain-id ${this.targetChainId}`);
-
-      // Update provider URI for Foundry
-      findAndReplaceRecursive(this.fullPath, 'target_provider = "\\${PROVIDER_URI_84532}"', `target_provider = "\${PROVIDER_URI_${this.targetChainId}}"`);
-      findAndReplaceRecursive(this.fullPath, 'target_provider = "\\${RPC_URL_84532}"', `target_provider = "\${RPC_URL_${this.targetChainId}}"`);
-    }
-
-    // Remove query type annotations (expect `handleCrosschainFilesAndFolders` to be run before this is called)
-    findAndReplaceRecursive(this.fullPath, '-samechain', '');
-    findAndReplaceRecursive(this.fullPath, '-crosschain', '');
 
     this.actions.push({
       description,

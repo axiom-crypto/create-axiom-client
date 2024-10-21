@@ -51,9 +51,6 @@ export const scaffoldScript = async (
   // Install axiom-std
   await sm.execWithStream("forge install axiom-crypto/axiom-std", [], "Install axiom-std");
 
-  // Handle crosschain files and folders
-  sm.handleCrosschainFilesAndFolders("Rename folders for query type");
-
   // Find and replace all
   sm.findAndReplaceAll("Update chain data");
 

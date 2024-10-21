@@ -20,7 +20,6 @@ export const setup = async (
     Prompts.common.path,
     Prompts.common.scaffold,
     Prompts.common.manager,
-    Prompts.common.queryType,
   ];
 
   let setupQuestions1: PromptObject[] = [
@@ -28,11 +27,6 @@ export const setup = async (
 
   let setupQuestionsSamechain: PromptObject[] = [
     Prompts.samechain.chainId,
-  ];
-
-  let setupQuestionsCrosschain: PromptObject[] = [
-    Prompts.crosschain.sourceChainId,
-    Prompts.crosschain.targetChainId,
   ];
 
   // Remove prompt for path if it's already passed in
@@ -60,36 +54,13 @@ export const setup = async (
     ...answers0,
     ...options,
   }
-
-  // Get queryType response and use it to determine which questions to ask next
-  let isCrosschain = false;
-  const queryType = answers0.queryType;
-  if (queryType === "crosschain") {
-    isCrosschain = true;
-  } else if (!queryType || queryType === "samechain") {
-    isCrosschain = false;
-  } else {
-    throw new Error(`Invalid query type: ${queryType}. Valid query types are ('samechain', 'crosschain')`);
-  }
   
-  if (!isCrosschain) {
-    // (samechain) Validate chainId answers in options
-    if (parseAnswer("chainId", options, Options.chainId)) {
-      setupQuestionsSamechain = filterQuestions("chainId", setupQuestionsSamechain);
-    }
-    setupQuestions1 = setupQuestionsSamechain;
-  } else {
-    // (crosschain) Validate sourceChainId answers in options
-    if (parseAnswer("sourceChainId", options, Options.sourceChainId)) {
-      setupQuestionsCrosschain = filterQuestions("sourceChainId", setupQuestionsCrosschain);
-    }
-
-    // (crosschain) Validate targetChainId answers in options
-    if (parseAnswer("targetChainId", options, Options.targetChainId)) {
-      setupQuestionsCrosschain = filterQuestions("targetChainId", setupQuestionsCrosschain);
-    }
-    setupQuestions1 = setupQuestionsCrosschain;
+  // (samechain) Validate chainId answers in options
+  if (parseAnswer("chainId", options, Options.chainId)) {
+    setupQuestionsSamechain = filterQuestions("chainId", setupQuestionsSamechain);
   }
+  setupQuestions1 = setupQuestionsSamechain;
+  
   let answers1 = await prompt(setupQuestions1);
 
   let answers = {
@@ -100,13 +71,12 @@ export const setup = async (
   }
 
   let sourceChainId = answers.sourceChainId || answers.chainId!;
-  let targetChainId = answers.targetChainId;
 
   // Validate that the package manager the user has selected is installed
   validatePackageManager(answers.manager);
 
   // Initialize scaffold manager
-  const scaffoldManager = new ProjectScaffoldManager(answers.path!, answers.manager!, sourceChainId, targetChainId);
+  const scaffoldManager = new ProjectScaffoldManager(answers.path!, answers.manager!, sourceChainId);
   return {
     scaffoldManager,
     answers,

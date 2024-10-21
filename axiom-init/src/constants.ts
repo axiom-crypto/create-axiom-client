@@ -4,36 +4,19 @@ import { PromptObject } from "prompts";
 export const Options: Record<string, string[]> = {
   scaffold: ["nextjs", "script", "forge"],
   manager: ["npm", "yarn", "pnpm"],
-  queryType: ["samechain", "crosschain"],
-  chainId: ["11155111", "84532", "1" /*, "8453" */],
-  targetChainId: ["84532"],
-  sourceChainId: ["11155111"],
+  chainId: ["11155111", "1"],
 };
 
 // deployed ExampleV2Client contract address
 export const ExampleV2Client: Record<string, string> = {
   "1": "0x4D36100eA7BD6F685Fd44EB6BE5ccE7A92047581",
   "11155111": "0x4A4e2D8f3fBb3525aD61db7Fc843c9bf097c362e",
-  "8453": "0x89C6FbABf570dc53b64b5D52095A8d955dABAE16",
-  "84532": "0x9D39ae8Ba883092c603aD4405894df5304341D61",
 };
 
 // deployed AverageBalance contract address (if empty then the user will need to deploy it)
 export const AverageBalance: Record<string, string> = {
   "1": "",
   "11155111": "0x50F2D5c9a4A35cb922a631019287881f56A00ED5",
-  "8453": "0xd08F7cE9d0De90dB17B33E1ff747ec515aB63747",
-  "84532": "0xC094A594bFd60abc521f5e033e4F681Cc87530f0",
-};
-
-// AverageBalanceCrosschain[targetChainId][sourceChainId]
-export const AverageBalanceCrosschain: Record<string, Record<string, string>> = {
-  "84532": {
-    "11155111": "0x06442B357582282b4f7E76D47787dcF1C175fF1c",
-  },
-  // "8453": {
-  //   "1": "",
-  // }
 };
 
 export const Prompts: Record<string, Record<string, PromptObject>> = {
@@ -63,15 +46,6 @@ export const Prompts: Record<string, Record<string, PromptObject>> = {
       ],
       message: "Which package manager do you want to use for the project?"
     },
-    "queryType": {
-      name: "queryType",
-      type: "select",
-      choices: [
-        { title: "Same-chain", value: "samechain", description: "Query and use data from the same chain (default)" },
-        { title: "Cross-chain", value: "crosschain", description: "Query data from one chain (source) and use it on another chain (target)" },
-      ],
-      message: "What type of Axiom query would you like to use?"
-    },
   },
   "samechain": {
     "chainId": {
@@ -79,31 +53,9 @@ export const Prompts: Record<string, Record<string, PromptObject>> = {
       type: "select",
       choices: [
         { title: "11155111", value: "11155111", description: "Ethereum Sepolia (default)" }, 
-        { title: "84532", value: "84532", description: "Base Sepolia" },
         { title: "1", value: "1", description: "Ethereum Mainnet" },
-        // { title: "8453", value: "8453", description: "Base Mainnet" },
       ],
       message: "Which chain ID would you like your project to use?"
     },
   },
-  "crosschain": {
-    "targetChainId": {
-      name: "targetChainId",
-      type: "select",
-      choices: [
-        { title: "84532", value: "84532", description: "Base Sepolia (default)" }, 
-        // { title: "8453", value: "8453", description: "Base Mainnet" }, 
-      ],
-      message: "Which chain ID would you like your project to use for the target chain (where you send the Axiom query transaction)?"
-    },
-    "sourceChainId": {
-      name: "sourceChainId",
-      type: "select",
-      choices: [
-        { title: "11155111", value: "11155111", description: "Ethereum Sepolia (default)" }, 
-        // { title: "1", value: "1", description: "Ethereum Mainnet" },
-      ],
-      message: "Which chain ID would you like your project to use for the source chain (where the data is queried from)?"
-    },
-  }
 }

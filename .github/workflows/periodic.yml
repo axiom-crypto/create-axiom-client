@@ -7,8 +7,6 @@ on:
 
 env:
   RPC_URL_11155111: ${{ secrets.RPC_URL_11155111 }}
-  RPC_URL_8453: ${{ secrets.RPC_URL_8453 }}
-  RPC_URL_84532: ${{ secrets.RPC_URL_84532 }}
 
 jobs:
   create-axiom-client-periodic-test:
