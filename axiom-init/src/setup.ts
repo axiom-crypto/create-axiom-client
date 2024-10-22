@@ -35,7 +35,7 @@ export const setup = async (
   }
 
   // Remove prompt answers if they're already passed in
-  let prompts = ["scaffold", "manager", "queryType"];
+  let prompts = ["scaffold", "manager"];
   let filterKeys = Object.keys(toFilter || {});
   prompts = prompts.filter(prompt => !filterKeys.includes(prompt));
 
